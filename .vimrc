@@ -488,9 +488,12 @@ autocmd vimrc CmdwinEnter * call s:InitCmdwin()
 function! s:InitCmdwin()
     nnoremap <buffer><silent> q :<C-u>quit<CR>
     nnoremap <buffer><silent> <TAB> :<C-u>quit<CR>
-    inoremap <buffer><expr><CR> neocomplete#close_popup()."\<CR>"
-    inoremap <buffer><expr><C-h> col('.') == 1 ? "\<ESC>:quit\<CR>" : neocomplete#cancel_popup()."\<C-h>"
-    inoremap <buffer><expr><BS> col('.') == 1 ? "\<ESC>:quit\<CR>" : neocomplete#cancel_popup()."\<C-h>"
+
+    if neobundle#tap('neocomplete.vim') "{{{
+        inoremap <buffer><expr><CR> neocomplete#close_popup()."\<CR>"
+        inoremap <buffer><expr><C-h> col('.') == 1 ? "\<ESC>:quit\<CR>" : neocomplete#cancel_popup()."\<C-h>"
+        inoremap <buffer><expr><BS> col('.') == 1 ? "\<ESC>:quit\<CR>" : neocomplete#cancel_popup()."\<C-h>"
+    endif "}}}
 
     "inoremap <buffer><expr><TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : "\<C-x>\<C-u>\<C-p>"
     inoremap <buffer><expr><TAB> pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>"

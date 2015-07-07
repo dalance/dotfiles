@@ -16,7 +16,7 @@ update:
 deploy:
 	@$(foreach val, $(DOTFILES_FILES), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
 
-init:
+init: vimbuild tmuxbuild neobundle
 	@#$(foreach val, $(wildcard ./etc/init/*.sh), DOTPATH=$(PWD) bash $(val);)
 	@#DOTPATH=$(PWD) bash $(PWD)/etc/init/init.sh
 
@@ -26,6 +26,11 @@ install: update deploy init
 clean:
 	@-$(foreach val, $(DOTFILES_FILES), rm -vrf $(HOME)/$(val);)
 	-rm -rf $(PWD)
+
+neobundle:
+	if [ ! -d "~/.vim/bundle" ]; then mkdir -p ~/.vim/bundle; fi
+	if [ ! -d "~/.vim/bundle/neobundle.vim" ]; then git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim; fi
+
 
 prebuild:
 	if [ ! -d "build" ]; then mkdir build; fi
