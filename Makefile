@@ -49,3 +49,4 @@ tmuxbuild: prebuild
 	if [ -d "build/tmux" ]; then cd build/tmux; git pull origin master; cd ../..; else git clone https://github.com/tmux/tmux.git build/tmux; fi
 	cd build/tmux; sh autogen.sh; ./configure;
 	make -C build/tmux
+	sudo make -C build/tmux install
