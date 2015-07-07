@@ -30,21 +30,21 @@ pkg:
 	sudo yum install $(PKG_LIST)
 
 neobundle:
-	if [ ! -a "~/.vim/bundle" ]; then mkdir ~/.vim/bundle; fi
-	if [ ! -a "~/.vim/bundle/neobundle.vim" ]; then git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim; fi
+	if [ ! -d "~/.vim/bundle" ]; then mkdir ~/.vim/bundle; fi
+	if [ ! -d "~/.vim/bundle/neobundle.vim" ]; then git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim; fi
 
 
 prebuild:
-	if [ ! -a "build" ]; then mkdir build; fi
+	if [ ! -d "build" ]; then mkdir build; fi
 
 vimbuild: prebuild
-	if [ -a "build/vim" ]; then cd build/vim; hg pull -u; cd ../..; else hg clone https://vim.googlecode.com/hg/ build/vim; fi
+	if [ -d "build/vim" ]; then cd build/vim; hg pull -u; cd ../..; else hg clone https://vim.googlecode.com/hg/ build/vim; fi
 	cd build/vim/src; ./configure --with-features=huge --enable-pythoninterp --enable-rubyinterp --enable-luainterp --enable-fail-if-missing
 	make -C build/vim/src
 	sudo make -C build/vim/src install
 
 tmuxbuild: prebuild
-	if [ -a "build/tmux" ]; then cd build/tmux; git pull origin master; cd ../..; else git clone https://github.com/tmux/tmux.git build/tmux; fi
+	if [ -d "build/tmux" ]; then cd build/tmux; git pull origin master; cd ../..; else git clone https://github.com/tmux/tmux.git build/tmux; fi
 	cd build/tmux; sh autogen.sh; ./configure;
 	make -C build/tmux
 	sudo make -C build/tmux install
