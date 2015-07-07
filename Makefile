@@ -1,6 +1,7 @@
 DOTFILES_EXCLUDES := .DS_Store .git .gitmodules .travis.yml
 DOTFILES_TARGET   := $(wildcard .??*)
 DOTFILES_FILES    := $(filter-out $(DOTFILES_EXCLUDES), $(DOTFILES_TARGET))
+PKG_LIST          := gcc lua-devel python-devel ruby-devel ncurses-devel automake libevent-devel ctags ksh libXScrnSaver glibc.i686 libX11.i686 libXext.i686
 
 all: install
 
@@ -26,6 +27,9 @@ install: update deploy init
 clean:
 	@-$(foreach val, $(DOTFILES_FILES), rm -vrf $(HOME)/$(val);)
 	-rm -rf $(PWD)
+
+pkg:
+	sudo yum install $(PKG_LIST)
 
 neobundle:
 	if [ ! -d "~/.vim/bundle" ]; then mkdir -p ~/.vim/bundle; fi
