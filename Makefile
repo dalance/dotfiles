@@ -17,7 +17,7 @@ update:
 deploy:
 	@$(foreach val, $(DOTFILES_FILES), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
 
-init: vimbuild tmuxbuild neobundle
+init: gitconfig vimbuild tmuxbuild neobundle
 
 install: update deploy init
 	@exec $$SHELL
@@ -48,3 +48,7 @@ tmuxbuild: prebuild
 	cd build/tmux; sh autogen.sh; ./configure;
 	make -C build/tmux
 	sudo make -C build/tmux install
+
+gitconfig:
+	git config --replace-all user.name dalance
+	git config --replace-all user.email dalance@gmail.com
