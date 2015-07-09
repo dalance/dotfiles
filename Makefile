@@ -1,12 +1,18 @@
 DOTFILES_EXCLUDES := .DS_Store .git .gitmodules .travis.yml .gitignore
 DOTFILES_TARGET   := $(wildcard .??*)
 DOTFILES_FILES    := $(filter-out $(DOTFILES_EXCLUDES), $(DOTFILES_TARGET))
-PKG_LIST          := gcc lua-devel python-devel ruby-devel ncurses-devel automake libevent-devel ctags ksh libXScrnSaver glibc.i686 libX11.i686 libXext.i686
 
 all: install
 
+install: update deploy init
+	@exec $$SHELL
+
 list:
 	@$(foreach val, $(DOTFILES_FILES), ls -dF $(val);)
+
+clean:
+	@-$(foreach val, $(DOTFILES_FILES), rm -vrf $(HOME)/$(val);)
+	-rm -rf $(PWD)
 
 update:
 	git pull origin master
@@ -19,20 +25,9 @@ deploy:
 
 init: gitconfig vimbuild tmuxbuild neobundle
 
-install: update deploy init
-	@exec $$SHELL
-
-clean:
-	@-$(foreach val, $(DOTFILES_FILES), rm -vrf $(HOME)/$(val);)
-	-rm -rf $(PWD)
-
-pkg:
-	sudo yum install $(PKG_LIST)
-
-neobundle:
-	if [ ! -d "~/.vim/bundle" ]; then mkdir ~/.vim/bundle; fi
-	if [ ! -d "~/.vim/bundle/neobundle.vim" ]; then git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim; fi
-
+gitconfig:
+	git config --replace-all user.name dalance
+	git config --replace-all user.email dalance@gmail.com
 
 prebuild:
 	if [ ! -d "build" ]; then mkdir build; fi
@@ -49,6 +44,6 @@ tmuxbuild: prebuild
 	make -C build/tmux
 	sudo make -C build/tmux install
 
-gitconfig:
-	git config --replace-all user.name dalance
-	git config --replace-all user.email dalance@gmail.com
+neobundle:
+	if [ ! -d "~/.vim/bundle" ]; then mkdir -p ~/.vim/bundle; fi
+	if [ ! -d "~/.vim/bundle/neobundle.vim" ]; then git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim; fi
