@@ -42,7 +42,7 @@ bindkey "^S" history-incremental-search-forward
 LISTMAX=0
 HISTFILE=$HOME/.zsh/.zsh_history
 HISTSIZE=10000
-SAVEHIST=100000
+SAVEHIST=10000
 
 if [ $UID = 0 ]; then
     unset HISTFILE
@@ -302,10 +302,18 @@ alias vlc='MALLOC_CHECK_=1 vlc >& /dev/null'
 
 alias ctags='ctags -R --exclude=lib'
 
-alias top='top -M'
+alias top='glances'
 
 #- Local Setting -------------------------------------------
 
 if [ -e $HOME/.zshrc.local ]; then
     source $HOME/.zshrc.local
 fi
+
+#- Antigen -------------------------------------------------
+
+#source ~/dotfiles/antigen/antigen.zsh
+
+#antigen bundle zsh-users/zsh-syntax-highlighting
+
+#antigen apply

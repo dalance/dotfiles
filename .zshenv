@@ -2,16 +2,11 @@
 
 typeset -U path
 path=(
-    /bin(N-/)
     $HOME/bin(N-/)
-    /opt/chef/bin(N-/)
-    /usr/local/mono/bin(N-/)
-    /usr/local/scala/bin(N-/)
-    /usr/local/cuda/bin(N-/)
-    /usr/local/llvm/bin(N-/)
     /usr/local/bin(N-/)
-    /usr/bin(N-/)
     /usr/public/bin(N-/)
+    /usr/bin(N-/)
+    /bin(N-/)
 )
 
 #- Sudo Path Setting ---------------------------------------
