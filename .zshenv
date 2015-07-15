@@ -4,9 +4,9 @@ typeset -U path
 path=(
     $HOME/bin(N-/)
     /usr/local/bin(N-/)
-    /usr/public/bin(N-/)
     /usr/bin(N-/)
     /bin(N-/)
+    /usr/public/bin(N-/)
 )
 
 #- Sudo Path Setting ---------------------------------------

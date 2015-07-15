@@ -271,9 +271,9 @@ alias -s pdf=evince
 alias -s xls=libreoffice
 alias -s ppt=libreoffice
 alias -s doc=libreoffice
-alias -s bmp=gthumb
-alias -s jpg=gthumb
-alias -s png=gthumb
+alias -s bmp=shotwell
+alias -s jpg=shotwell
+alias -s png=shotwell
 
 # colore-ls
 # 個人カラー設定のロード
@@ -310,10 +310,34 @@ if [ -e $HOME/.zshrc.local ]; then
     source $HOME/.zshrc.local
 fi
 
-#- Antigen -------------------------------------------------
+#- Pliguins ------------------------------------------------
 
-#source ~/dotfiles/antigen/antigen.zsh
+if [ -f ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+    source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-#antigen bundle zsh-users/zsh-syntax-highlighting
+    ZSH_HIGHLIGHT_STYLES[default]=none
+    ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=red,bold
+    ZSH_HIGHLIGHT_STYLES[reserved-word]=fg=yellow,bold
+    ZSH_HIGHLIGHT_STYLES[alias]=fg=green,bold
+    ZSH_HIGHLIGHT_STYLES[builtin]=fg=green,bold
+    ZSH_HIGHLIGHT_STYLES[function]=fg=green,bold
+    ZSH_HIGHLIGHT_STYLES[command]=fg=green,bold
+    ZSH_HIGHLIGHT_STYLES[precommand]=fg=green,underline,bold
+    ZSH_HIGHLIGHT_STYLES[commandseparator]=none
+    ZSH_HIGHLIGHT_STYLES[hashed-command]=fg=green,bold
+    ZSH_HIGHLIGHT_STYLES[path]=fg=blue,bold
+    ZSH_HIGHLIGHT_STYLES[path_prefix]=fg=blue,underline,bold
+    ZSH_HIGHLIGHT_STYLES[path_approx]=fg=yellow,underline,bold
+    ZSH_HIGHLIGHT_STYLES[globbing]=fg=blue,bold
+    ZSH_HIGHLIGHT_STYLES[history-expansion]=fg=blue,bold
+    ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=none
+    ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=none
+    ZSH_HIGHLIGHT_STYLES[back-quoted-argument]=none
+    ZSH_HIGHLIGHT_STYLES[single-quoted-argument]=fg=yellow,bold
+    ZSH_HIGHLIGHT_STYLES[double-quoted-argument]=fg=yellow,bold
+    ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]=fg=cyan,bold
+    ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]=fg=cyan,bold
+    ZSH_HIGHLIGHT_STYLES[assign]=none
 
-#antigen apply
+fi
+
