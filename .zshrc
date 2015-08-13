@@ -248,6 +248,27 @@ make_p $cache_hosts_file $known_hosts_file && update_cache_hosts
 
 _cache_hosts=( $(< $cache_hosts_file) )
 
+sudo() {
+    local args
+    case $1 in
+        vi|vim)
+            args=()
+            for arg in $@[2,-1]
+            do
+                if [ $arg[1] = '-' ]; then
+                    args[$(( 1+$#args ))]=$arg
+                else
+                    args[$(( 1+$#args ))]="sudo:$arg"
+                fi
+            done
+            command vim $args
+            ;;
+        *)
+            command sudo $@
+            ;;
+    esac
+}
+
 #- Alias ---------------------------------------------------
 
 alias cp='cp -rf'
@@ -339,5 +360,14 @@ if [ -f ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
     ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]=fg=cyan,bold
     ZSH_HIGHLIGHT_STYLES[assign]=none
 
+fi
+
+if [ -f ~/dotfiles/zaw/zaw.zsh ]; then
+    source ~/dotfiles/zaw/zaw.zsh
+
+    bindkey '^Z' zaw
+    bindkey '^R' zaw-history
+    bindkey '^P' zaw-process
+    bindkey -M filterselect '^J' send-break
 fi
 

@@ -68,6 +68,7 @@ NeoBundle 'derekwyatt/vim-scala'
 NeoBundle 'edkolev/tmuxline.vim'
 NeoBundle 'rust-lang/rust.vim'
 NeoBundle 'cespare/vim-toml'
+NeoBundle 'chrisbra/SudoEdit.vim'
 "NeoBundle 'phildawes/racer', {
 "            \ 'build' : {
 "            \   'mac' : 'cargo build --release',
@@ -148,7 +149,7 @@ if neobundle#tap('alpaca_tags') "{{{
     "            \   '_': '-R --sort=yes'
     "            \ }
     let g:alpaca_tags#config = {
-                \   '_': '-R --exclude="*/lib/*" --exclude="*/outputs/*"'
+                \   '_': '-R'
                 \ }
     let g:alpaca_tags#timeout_period = 0
     autocmd vimrc BufEnter * AlpacaTagsSet
@@ -310,7 +311,7 @@ set backspace=indent,eol,start
 "set showmatch
 "" Highlight when CursorMoved.
 "set cpoptions-=m
-"set matchtime=1
+"set matchtime=0
 "" Highlight <>.
 "set matchpairs+=<:>
 set matchpairs=
@@ -393,6 +394,7 @@ set nobackup
 set writebackup
 
 colorscheme hybrid
+"hi MatchParen ctermbg=LightGray
 
 "
 " }}}
@@ -411,7 +413,7 @@ autocmd vimrc FileType python if has('python3') | setlocal omnifunc=python3compl
 autocmd vimrc FileType python setlocal foldmethod=indent
 
 " verilog
-autocmd vimrc BufNewFile,BufRead *.v,*.vh,*.sv,*.svi set filetype=verilog
+autocmd vimrc BufNewFile,BufRead *.v,*.vh,*.sv,*.svi,*.vp set filetype=verilog
 
 " asmxyz
 autocmd vimrc BufNewFile,BufRead *.s,*.asm,*.txt set filetype=asmxyz
