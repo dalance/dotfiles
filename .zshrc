@@ -10,6 +10,10 @@ zstyle ':completion:*:default' list-colors  ""
 zstyle ':completion:*:cd:*'    tag-order    local-directories path-directories
 zstyle ':completion:sudo:*'    environ      PATH="$SUDO_PATH:$PATH"
 
+#- Hook ----------------------------------------------------
+
+autoload -Uz add-zsh-hook
+
 #- Vcs Info ------------------------------------------------
 
 autoload -Uz vcs_info
@@ -17,11 +21,15 @@ autoload -Uz vcs_info
 zstyle  ':vcs_info:*:*'   formats      '[%b(%s)]'
 zstyle  ':vcs_info:svn:*' branchformat '%b:%r'
 
-precmd() {
-    psvar=()
-    LANG=en_US.UTF-8 vcs_info
-    [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+function precmd_vcs() {
+    if [ $(pwd) != '/auto' ]; then
+        psvar=()
+        LANG=en_US.UTF-8 vcs_info
+        [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+    fi
 }
+
+add-zsh-hook precmd precmd_vcs 
 
 #- Prompt --------------------------------------------------
 
@@ -370,4 +378,5 @@ if [ -f ~/dotfiles/zaw/zaw.zsh ]; then
     bindkey '^P' zaw-process
     bindkey -M filterselect '^J' send-break
 fi
+
 

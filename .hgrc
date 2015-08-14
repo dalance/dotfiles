@@ -1,0 +1,23 @@
+[ui]
+verbose = True
+editor = vim
+ignore = ~/.hgignore_global
+
+[extensions]
+rebase=
+color=
+hgext.convert=
+pager=
+
+[textful]
+encoding = utf-8, euc-jp, cp932, iso-2022-jp
+
+[alias]
+gl = log -G
+
+[pager]
+pager = LESS='-R' less
+quiet = True
+attend = help,diff,log,gl
+
+%include .hgrc.local
