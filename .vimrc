@@ -51,7 +51,6 @@ NeoBundle 'Shougo/vimproc.vim', {
             \     'unix'    : 'gmake',
             \ },
             \ }
-NeoBundle has('lua') ? 'Shougo/neocomplete.vim' : 'Shougo/neocomplcache.vim'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'Shougo/vinarise.vim'
@@ -68,7 +67,8 @@ NeoBundle 'derekwyatt/vim-scala'
 NeoBundle 'edkolev/tmuxline.vim'
 NeoBundle 'rust-lang/rust.vim'
 NeoBundle 'cespare/vim-toml'
-NeoBundle 'chrisbra/SudoEdit.vim'
+NeoBundle 'chrisbra/SudoEdit.vim', { 'rev': 'e7fa13b' }
+NeoBundle 'miyakogi/seiya.vim'
 "NeoBundle 'phildawes/racer', {
 "            \ 'build' : {
 "            \   'mac' : 'cargo build --release',
@@ -76,6 +76,31 @@ NeoBundle 'chrisbra/SudoEdit.vim'
 "            \ },
 "            \ }
 NeoBundle 'plasticboy/vim-markdown'
+
+if has('nvim')
+    NeoBundleLazy 'Shougo/deoplete.nvim', {
+        \ "autoload": { "insert": 1 }
+        \ }
+else
+    NeoBundleLazy 'Shougo/neocomplete.vim', {
+        \ "autoload": { "insert": 1 }
+        \ }
+endif
+
+if has('nvim')
+    let s:hooks = neobundle#get_hooks("deoplete.nvim")
+    function! s:hooks.on_source(bundle)
+        let g:deoplete#enable_at_startup = 1
+    endfunction
+else
+    let s:hooks = neobundle#get_hooks("neocomplete.vim")
+    function! s:hooks.on_source(bundle)
+        let g:neocomplete#enable_at_startup = 1
+        let g:neocomplete#enable_ignore_case = 1
+        let g:neocomplete#enable_smart_case = 1
+    endfunction
+endif
+
 
 call neobundle#end()
 
@@ -94,11 +119,11 @@ endif
 " Plugins: {{{
 "
 
-if neobundle#tap('neocomplete.vim') "{{{
-    let g:neocomplete#enable_at_startup = 1
-    let g:neocomplete#enable_ignore_case = 1
-    let g:neocomplete#enable_smart_case = 1
-endif "}}}
+"if neobundle#tap('neocomplete.vim') "{{{
+"    let g:neocomplete#enable_at_startup = 1
+"    let g:neocomplete#enable_ignore_case = 1
+"    let g:neocomplete#enable_smart_case = 1
+"endif "}}}
 
 if neobundle#tap('unite.vim') "{{{
     let g:unite_source_history_yank_enable = 1
@@ -185,6 +210,10 @@ if neobundle#tap('racer') "{{{
     let $RUST_SRC_PATH="/work/nhatta/ext_repo/rust/src/"
 endif "}}}
 
+if neobundle#tap('seiya.vim') "{{{
+    let g:seiya_auto_enable = !has( 'gui_running' )
+endif "}}}
+
 "
 " }}}
 "-------------------------------------------------------------------------------
@@ -253,8 +282,8 @@ set fileformat=unix
 " Automatic recognition of a new line cord.
 set fileformats=unix,dos,mac
 " A fullwidth character is displayed in vim properly.
-"set ambiwidth=double
-set ambiwidth=single
+set ambiwidth=double
+"set ambiwidth=single
 
 "
 " }}}
@@ -285,6 +314,11 @@ set wrapscan
 " Edit: {{{
 "
 
+" Enable indent
+"set autoindent
+"set smartindent
+set cindent
+
 " Smart insert tab setting
 set smarttab
 " Exchange tab to spaces.
@@ -314,7 +348,7 @@ set backspace=indent,eol,start
 "set matchtime=0
 "" Highlight <>.
 "set matchpairs+=<:>
-set matchpairs=
+"set matchpairs=
 
 " Auto reload if file is changed.
 "set autoread
@@ -393,6 +427,7 @@ set ttyfast
 set nobackup
 set writebackup
 
+set background=dark
 colorscheme hybrid
 "hi MatchParen ctermbg=LightGray
 
@@ -404,13 +439,10 @@ colorscheme hybrid
 " FileType: {{{
 "
 
-" Enable smart indent
-set autoindent smartindent
-
 " python
 autocmd vimrc FileType python if has('python')  | setlocal omnifunc=pythoncomplete#Complete  | endif
 autocmd vimrc FileType python if has('python3') | setlocal omnifunc=python3complete#Complete | endif
-autocmd vimrc FileType python setlocal foldmethod=indent
+"autocmd vimrc FileType python setlocal foldmethod=indent
 
 " verilog
 autocmd vimrc BufNewFile,BufRead *.v,*.vh,*.sv,*.svi,*.vp set filetype=verilog
@@ -418,8 +450,18 @@ autocmd vimrc BufNewFile,BufRead *.v,*.vh,*.sv,*.svi,*.vp set filetype=verilog
 " asmxyz
 autocmd vimrc BufNewFile,BufRead *.s,*.asm,*.txt set filetype=asmxyz
 
+" nz
+autocmd vimrc BufNewFile,BufRead *.nz set filetype=nz
+
 " liberty
 autocmd vimrc BufNewFile,BufRead *.lib set filetype=liberty
+
+" llvm
+autocmd vimrc BufNewFile,BufRead *.ll set filetype=llvm
+autocmd vimrc BufNewFile,BufRead *.td set filetype=tablegen
+
+" xaml
+autocmd vimrc BufNewFile,BufRead *.xaml set filetype=xml
 
 "
 " }}}
@@ -497,10 +539,16 @@ function! s:InitCmdwin()
         inoremap <buffer><expr><BS> col('.') == 1 ? "\<ESC>:quit\<CR>" : neocomplete#cancel_popup()."\<C-h>"
     endif "}}}
 
+    if neobundle#tap('deoplete.nvim') "{{{
+        inoremap <buffer><expr><CR> deoplete#mappings#close_popup()."\<CR>"
+        inoremap <buffer><expr><C-h> col('.') == 1 ? "\<ESC>:quit\<CR>" : deoplete#mappings#cancel_popup()."\<C-h>"
+        inoremap <buffer><expr><BS> col('.') == 1 ? "\<ESC>:quit\<CR>" : deoplete#mappings#cancel_popup()."\<C-h>"
+    endif "}}}
+
     "inoremap <buffer><expr><TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : "\<C-x>\<C-u>\<C-p>"
     inoremap <buffer><expr><TAB> pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>"
 
-    silent execute printf("1,%ddelete _", min([&history - 20, line("$") - 20]))
+    silent execute printf("1,%ddelete _", max([0,min([&history - 20, line("$") - 20])]))
     call cursor(line('$'), 0)
 
     startinsert!

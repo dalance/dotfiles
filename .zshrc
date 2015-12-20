@@ -22,11 +22,9 @@ zstyle  ':vcs_info:*:*'   formats      '[%b(%s)]'
 zstyle  ':vcs_info:svn:*' branchformat '%b:%r'
 
 function precmd_vcs() {
-    if [ $(pwd) != '/auto' ]; then
-        psvar=()
-        LANG=en_US.UTF-8 vcs_info
-        [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
-    fi
+    psvar=()
+    LANG=en_US.UTF-8 vcs_info
+    [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
 }
 
 add-zsh-hook precmd precmd_vcs 
@@ -60,6 +58,8 @@ fi
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 
 REPORTTIME=3
+
+DISABLE_AUTO_TITLE=true
 
 #- Zsh Option ----------------------------------------------
 
@@ -125,7 +125,7 @@ setopt   nomatch                # ファイル名生成のパターンにマッ�
 unsetopt null_glob              # ファイル名生成のパターンがマッチしないとき、引数リストからそのパターンを取り除く
 setopt   numeric_glob_sort      # 数字を数値と解釈してソートする
 setopt   rc_expand_param        # 配列変数 x=(1 2) を用いて `a${x}b' を置換するとき、`a1 2b' ではなく `a1b a2b' に置換される
-setopt   rematch_pcre           # =~ 演算子で正規表現マッチに Perl Compatible Regular Expressions ライブラリを用いる
+unsetopt rematch_pcre           # =~ 演算子で正規表現マッチに Perl Compatible Regular Expressions ライブラリを用いる
 unsetopt sh_glob                # グロッビングにおいて、`('、'|'、')' および '<' の特殊な意味を無効化する
 unsetopt unset                  # 未定義変数を空白で置換する
 unsetopt warn_create_global     # 関数内で代入によりグローバル変数が宣言された時に警告する
@@ -286,6 +286,7 @@ alias po="popd"
 
 alias vi='vim'
 alias via="vim $HOME/.zshrc"
+alias vim='nvim'
 alias seta="source $HOME/.zshrc;zcompile $HOME/.zshrc"
 
 # グローバルエイリアス

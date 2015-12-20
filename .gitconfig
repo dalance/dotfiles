@@ -8,10 +8,15 @@
     br = branch
     gl = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
 
+[http]
+    proxy =
+
 [include]
     path = .gitconfig.local
 [user]
-	email = dalance@gmail.com
-	name = dalance
+    email = dalance@gmail.com
+    name = dalance
 [push]
-	default = simple
+    default = simple
+[help]
+    autocorrect = 1

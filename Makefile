@@ -21,6 +21,8 @@ update:
 
 deploy:
 	@$(foreach val, $(DOTFILES_FILES), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
+	@ln -sfnv ~/.vim   ~/.config/nvim
+	@ln -sfnv ~/.vimrc ~/.config/nvim/init.vim
 
 init: gitconfig vimbuild tmuxbuild neobundle
 
@@ -42,6 +44,12 @@ tmuxbuild: prebuild
 	cd build/tmux; sh autogen.sh; ./configure;
 	make -C build/tmux
 	sudo make -C build/tmux install
+
+neovimbuild: prebuild
+	if [ -d "build/neovim" ]; then cd build/neovim; git pull origin master; cd ../..; else git clone git://github.com/neovim/neovim build/neovim; fi
+	make -C build/neovim cmake
+	make -C build/neovim
+	sudo make -C build/neovim install
 
 neobundle:
 	if [ ! -d "~/.vim/bundle" ]; then mkdir -p ~/.vim/bundle; fi
