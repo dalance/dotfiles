@@ -10,3 +10,8 @@
 
 [include]
     path = .gitconfig.local
+[user]
+	email = dalance@gmail.com
+	name = dalance
+[push]
+	default = simple

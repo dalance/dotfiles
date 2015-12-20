@@ -308,6 +308,7 @@ alias -s png=shotwell
 # 個人カラー設定のロード
 if [ -f $HOME/.dir_colors ]; then
     eval `dircolors -b $HOME/.dir_colors`
+    zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} # 補完候補を色分け (GNU ls の色定義を流用)
 fi
 
 # ls
@@ -315,7 +316,6 @@ alias la='ls -aF --show-control-char --color=always'
 alias ls='ls --show-control-char --color=always'
 alias ll='ls -l --show-control-char --color=always'
 alias l.='ls -d .[a-zA-Z]* --color=always'
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} # 補完候補を色分け (GNU ls の色定義を流用)
 
 alias du="du -h"
 alias df="df -h"
@@ -339,11 +339,32 @@ if [ -e $HOME/.zshrc.local ]; then
     source $HOME/.zshrc.local
 fi
 
-#- Pliguins ------------------------------------------------
+#- Plugin --------------------------------------------------
 
-if [ -f ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-    source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/dotfiles/zplug/zplug
 
+zplug "zsh-users/zsh-syntax-highlighting", nice:10
+zplug "zsh-users/zsh-completions"
+zplug "zsh-users/zaw"
+zplug "seebi/dircolors-solarized", as:command
+#zplug "mollifier/anyframe"
+#zplug "b4b4r07/enhancd", of:enhancd.sh
+#zplug "peco/peco", as:command, from:gh-r
+#zplug "junegunn/fzf-bin", as:command, from:gh-r, file:fzf
+#zplug "junegunn/fzf", as:command, of:bin/fzf-tmux
+
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
+fi
+
+zplug load --verbose
+
+#- Plugin Config -------------------------------------------
+
+if zplug check "zsh-users/zsh-syntax-highlighting"; then
     ZSH_HIGHLIGHT_STYLES[default]=none
     ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=red,bold
     ZSH_HIGHLIGHT_STYLES[reserved-word]=fg=yellow,bold
@@ -367,11 +388,9 @@ if [ -f ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
     ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]=fg=cyan,bold
     ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]=fg=cyan,bold
     ZSH_HIGHLIGHT_STYLES[assign]=none
-
 fi
 
-if [ -f ~/dotfiles/zaw/zaw.zsh ]; then
-    source ~/dotfiles/zaw/zaw.zsh
+if zplug check "zsh-users/zaw"; then
 
     bindkey '^Z' zaw
     bindkey '^R' zaw-history

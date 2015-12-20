@@ -1,6 +1,3 @@
-[submodule "zsh-syntax-highlighting"]
-	path = zsh-syntax-highlighting
-	url = git://github.com/zsh-users/zsh-syntax-highlighting.git
-[submodule "zaw"]
-	path = zaw
-	url = git://github.com/zsh-users/zaw.git
+[submodule "zplug"]
+	path = zplug
+	url = git://github.com/b4b4r07/zplug
