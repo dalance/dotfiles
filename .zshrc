@@ -8,7 +8,8 @@ zstyle ':completion:*'         use-cache    true
 zstyle ':completion:*:default' menu         select=1
 zstyle ':completion:*:default' list-colors  ""
 zstyle ':completion:*:cd:*'    tag-order    local-directories path-directories
-zstyle ':completion:sudo:*'    environ      PATH="$SUDO_PATH:$PATH"
+#zstyle ':completion:sudo:*'    environ      PATH="$SUDO_PATH:$PATH"
+zstyle ':completion:*:sudo:*'  environ      PATH="$SUDO_PATH:$PATH"
 
 #- Hook ----------------------------------------------------
 
@@ -223,6 +224,8 @@ setopt   emacs                 # キーバインドをemacsモードにする
 unsetopt single_line_zle       # デフォルトの複数行コマンドライン編集ではなく、１行編集モードにする
 unsetopt vi                    # キーバインドをviモードにする
 
+setopt unset
+
 #- Function ------------------------------------------------
 
 # ssh ホスト名補完
@@ -286,7 +289,7 @@ alias po="popd"
 
 alias vi='vim'
 alias via="vim $HOME/.zshrc"
-alias vim='nvim'
+#alias vim='nvim'
 alias seta="source $HOME/.zshrc;zcompile $HOME/.zshrc"
 
 # グローバルエイリアス

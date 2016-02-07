@@ -20,3 +20,7 @@
     default = simple
 [help]
     autocorrect = 1
+
+[url "github:"]
+    InsteadOf = https://github.com/
+    InsteadOf = git@github.com:

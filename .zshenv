@@ -20,9 +20,6 @@ sudo_path=(
 
 if [ $(id -u) -eq 0 ]; then
     path=($sudo_path $path)
-else
-    # alias sudo="sudo env PATH=\"$SUDO_PATH:$PATH\""
-    :
 fi
 
 #- Function Path Setting -----------------------------------
