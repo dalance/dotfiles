@@ -1,4 +1,4 @@
-DOTFILES_EXCLUDES := .DS_Store .git .gitmodules .travis.yml .gitignore
+DOTFILES_EXCLUDES := .DS_Store .git .gitmodules .gitignore
 DOTFILES_TARGET   := $(wildcard .??*)
 DOTFILES_FILES    := $(filter-out $(DOTFILES_EXCLUDES), $(DOTFILES_TARGET))
 
@@ -24,8 +24,10 @@ deploy:
 	@mkdir -p $(HOME)/.zsh
 	@mkdir -p $(HOME)/.config
 	@mkdir -p $(HOME)/.vimundo
+	@mkdir -p $(HOME)/.ssh
 	@ln -sfnv $(HOME)/.vim   $(HOME)/.config/nvim
 	@ln -sfnv $(HOME)/.vimrc $(HOME)/.config/nvim/init.vim
+	@ln -sfnv $(HOME)/.ssh_config $(HOME)/.ssh/config
 
 init: gitconfig neobundle
 
