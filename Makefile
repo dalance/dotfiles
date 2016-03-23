@@ -2,7 +2,9 @@ DOTFILES_EXCLUDES := .DS_Store .git .gitmodules .travis.yml .gitignore
 DOTFILES_TARGET   := $(wildcard .??*)
 DOTFILES_FILES    := $(filter-out $(DOTFILES_EXCLUDES), $(DOTFILES_TARGET))
 
-default: update deploy init
+default: update deploy
+
+all: update deploy init build
 
 list:
 	@$(foreach val, $(DOTFILES_FILES), ls -dF $(val);)

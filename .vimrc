@@ -54,13 +54,12 @@ NeoBundle 'Shougo/vimproc.vim', {
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'Shougo/vinarise.vim'
-NeoBundle 'scrooloose/syntastic'
 NeoBundle 'mattn/benchvimrc-vim'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'w0ng/vim-hybrid'
 NeoBundle 'junegunn/vim-easy-align'
 NeoBundle 'osyo-manga/vim-anzu'
-NeoBundle 'osyo-manga/vim-over'
+"NeoBundle 'osyo-manga/vim-over'
 NeoBundle 'alpaca-tc/alpaca_tags'
 NeoBundle 'taku-o/vim-vis'
 NeoBundle 'derekwyatt/vim-scala'
@@ -76,31 +75,20 @@ NeoBundle 'miyakogi/seiya.vim'
 "            \ },
 "            \ }
 NeoBundle 'plasticboy/vim-markdown'
+NeoBundle 'tmux-plugins/vim-tmux'
+NeoBundle 'jeroenbourgois/vim-actionscript'
 
 if has('nvim')
     NeoBundleLazy 'Shougo/deoplete.nvim', {
         \ "autoload": { "insert": 1 }
         \ }
+    NeoBundle 'benekastah/neomake'
 else
     NeoBundleLazy 'Shougo/neocomplete.vim', {
         \ "autoload": { "insert": 1 }
         \ }
+    NeoBundle 'scrooloose/syntastic'
 endif
-
-if has('nvim')
-    let s:hooks = neobundle#get_hooks("deoplete.nvim")
-    function! s:hooks.on_source(bundle)
-        let g:deoplete#enable_at_startup = 1
-    endfunction
-else
-    let s:hooks = neobundle#get_hooks("neocomplete.vim")
-    function! s:hooks.on_source(bundle)
-        let g:neocomplete#enable_at_startup = 1
-        let g:neocomplete#enable_ignore_case = 1
-        let g:neocomplete#enable_smart_case = 1
-    endfunction
-endif
-
 
 call neobundle#end()
 
@@ -119,11 +107,21 @@ endif
 " Plugins: {{{
 "
 
-"if neobundle#tap('neocomplete.vim') "{{{
-"    let g:neocomplete#enable_at_startup = 1
-"    let g:neocomplete#enable_ignore_case = 1
-"    let g:neocomplete#enable_smart_case = 1
-"endif "}}}
+if neobundle#tap('neocomplete.vim') "{{{
+    let s:hooks = neobundle#get_hooks("neocomplete.vim")
+    function! s:hooks.on_source(bundle)
+        let g:neocomplete#enable_at_startup = 1
+        let g:neocomplete#enable_ignore_case = 1
+        let g:neocomplete#enable_smart_case = 1
+    endfunction
+endif "}}}
+
+if neobundle#tap('deoplete.nvim') "{{{
+    let s:hooks = neobundle#get_hooks("deoplete.nvim")
+    function! s:hooks.on_source(bundle)
+        let g:deoplete#enable_at_startup = 1
+    endfunction
+endif "}}}
 
 if neobundle#tap('unite.vim') "{{{
     let g:unite_source_history_yank_enable = 1
@@ -142,6 +140,10 @@ if neobundle#tap('syntastic') "{{{
     let g:syntastic_verilog_compiler_options = "-v *.include.v"
     let g:syntastic_scala_checkers = ["fsc"]
 endif "}}}
+
+"if neobundle#tap('neomake') "{{{
+"    autocmd vimrc BufWritePost * Neomake
+"endif "}}}
 
 if neobundle#tap('lightline.vim') "{{{
     let g:lightline = {
@@ -380,6 +382,8 @@ if has('persistent_undo')
     set undofile
     set undodir=~/.vimundo
 endif
+
+set mouse=""
 
 "
 " }}}

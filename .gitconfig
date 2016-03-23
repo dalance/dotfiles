@@ -11,16 +11,19 @@
 [http]
     proxy =
 
-[include]
-    path = .gitconfig.local
 [user]
     email = dalance@gmail.com
     name = dalance
+
 [push]
     default = simple
+
 [help]
     autocorrect = 1
 
 [url "github:"]
     InsteadOf = https://github.com/
     InsteadOf = git@github.com:
+
+[include]
+    path = .gitconfig.local
