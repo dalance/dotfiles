@@ -125,6 +125,12 @@ endif "}}}
 
 if neobundle#tap('unite.vim') "{{{
     let g:unite_source_history_yank_enable = 1
+    if executable('ambs')
+        let g:unite_source_grep_command = 'ambs'
+        let g:unite_source_grep_default_opts = '--column --no-color'
+        let g:unite_source_grep_recursive_opt = ''
+        let g:unite_source_grep_encoding = 'utf-8'
+    endif
 endif "}}}
 
 if neobundle#tap('vinarise.vim') "{{{

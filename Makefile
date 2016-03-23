@@ -23,6 +23,7 @@ deploy:
 	@$(foreach val, $(DOTFILES_FILES), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
 	@mkdir -p $(HOME)/.zsh
 	@mkdir -p $(HOME)/.config
+	@mkdir -p $(HOME)/.vimundo
 	@ln -sfnv $(HOME)/.vim   $(HOME)/.config/nvim
 	@ln -sfnv $(HOME)/.vimrc $(HOME)/.config/nvim/init.vim
 

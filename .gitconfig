@@ -22,8 +22,8 @@
     autocorrect = 1
 
 [url "github:"]
-    InsteadOf = https://github.com/
-    InsteadOf = git@github.com:
+    PushInsteadOf = https://github.com/
+    PushInsteadOf = git@github.com:
 
 [include]
     path = .gitconfig.local
