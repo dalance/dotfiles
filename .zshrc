@@ -252,6 +252,8 @@ setopt   emacs                 # キーバインドをemacsモードにする
 unsetopt single_line_zle       # デフォルトの複数行コマンドライン編集ではなく、１行編集モードにする
 unsetopt vi                    # キーバインドをviモードにする
 
+setopt unset
+
 #
 # }}}
 #-------------------------------------------------------------------------------
@@ -304,7 +306,7 @@ sudo() {
                     args[$(( 1+$#args ))]="sudo:$arg"
                 fi
             done
-            command vim $args
+            command nvim $args
             ;;
         *)
             command sudo $@
