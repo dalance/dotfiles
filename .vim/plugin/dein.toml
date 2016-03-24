@@ -1,0 +1,33 @@
+[[plugins]]
+repo = 'Shougo/dein.vim'
+
+[[plugins]]
+repo = 'Shougo/vimproc.vim'
+build = 'make'
+
+[[plugins]]
+repo = 'itchyny/lightline.vim'
+hook_add = '''
+  source ~/.vim/plugin/lightline.rc.vim
+'''
+
+[[plugins]]
+repo = 'w0ng/vim-hybrid'
+
+[[plugins]]
+repo = 'osyo-manga/vim-anzu'
+
+[[plugins]]
+repo = 'alpaca-tc/alpaca_tags'
+hook_add = '''
+  source ~/.vim/plugin/alpaca_tags.rc.vim
+'''
+
+[[plugins]]
+repo = 'taku-o/vim-vis'
+
+[[plugins]]
+repo = 'miyakogi/seiya.vim'
+
+[[plugins]]
+repo = 'chrisbra/SudoEdit.vim'

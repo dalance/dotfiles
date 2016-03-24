@@ -39,7 +39,10 @@ fi
 
 #- Editor Setting ------------------------------------------
 
-export EDITOR=vim
+export EDITOR=nvim
+if ! type nvim > /dev/null 2>&1; then
+    alias nvim=vim
+fi
 if ! type vim > /dev/null 2>&1; then
     alias vim=vi
 fi

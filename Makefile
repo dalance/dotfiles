@@ -28,6 +28,9 @@ deploy:
 	@ln -sfnv $(HOME)/.vim   $(HOME)/.config/nvim
 	@ln -sfnv $(HOME)/.vimrc $(HOME)/.config/nvim/init.vim
 	@ln -sfnv $(HOME)/.ssh_config $(HOME)/.ssh/config
+	@ln -sfnv $(HOME)/dotfiles/.vim/plugin $(HOME)/.vim/plugin
+	@ln -sfnv $(HOME)/dotfiles/.vim/indent $(HOME)/.vim/indent
+	@ln -sfnv $(HOME)/dotfiles/.vim/syntax $(HOME)/.vim/syntax
 
 init: gitconfig neobundle
 
@@ -58,7 +61,8 @@ tmuxbuild: prebuild
 
 neovimbuild: prebuild
 	if [ -d "build/neovim" ]; then cd build/neovim; git pull origin master; cd ../..; else git clone git://github.com/neovim/neovim build/neovim; fi
-	make -C build/neovim cmake
-	make -C build/neovim
+	rm -rf build/neovim/build
+	make -C build/neovim clean
+	make -C build/neovim CMAKE_BUILD_TYPE=RelWithDebInfo
 	sudo make -C build/neovim install
 

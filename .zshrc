@@ -327,7 +327,7 @@ alias po="popd"
 
 alias vi='vim'
 alias via="vim $HOME/.zshrc"
-#alias vim='nvim'
+alias vim='nvim'
 alias vimdiff='vim -d'
 alias seta="source $HOME/.zshrc;zcompile $HOME/.zshrc"
 

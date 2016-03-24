@@ -7,96 +7,97 @@ scriptencoding utf-8
 " Note: Skip initialization for vim-tiny or vim-small.
 if !1 | finish | endif
 
-if has('vim_starting')
-    if &compatible
-        set nocompatible
-    endif
+if &compatible
+    set nocompatible
 endif
 
-function! s:Source(path)
-    execute 'source' fnameescape(expand('dotfiles/' . a:path))
-endfunction
+if has('vim_starting')
+    let s:is_windows = has('win32') || has('win64')
 
-let s:isWindows = has('win16') || has('win32') || has('win64')
-function! IsWindows()
-    return s:isWindows
-endfunction
+    function! IsWindows() abort
+        return s:is_windows
+    endfunction
 
-augroup vimrc
-    autocmd!
-augroup END
+    " Use <Leader> in global plugin.
+    let g:mapleader = ','
+
+    if IsWindows()
+        " Exchange path separator.
+        set shellslash
+    endif
+
+    let $CACHE = expand('~/.cache')
+
+    if !isdirectory(expand($CACHE))
+        call mkdir(expand($CACHE), 'p')
+    endif
+
+    " Set augroup.
+    augroup vimrc
+        autocmd!
+    augroup END
+
+    " Load dein.
+    let s:dein_dir = finddir('dein.vim', '.;')
+    if s:dein_dir != '' || &runtimepath !~ '/dein.vim'
+        if s:dein_dir == '' && &runtimepath !~ '/dein.vim'
+            let s:dein_dir = expand('$CACHE/dein') . '/repos/github.com/Shougo/dein.vim'
+            if !isdirectory(s:dein_dir)
+                execute '!git clone https://github.com/Shougo/dein.vim' s:dein_dir
+            endif
+        endif
+        execute ' set runtimepath^=' . substitute(fnamemodify(s:dein_dir, ':p') , '/$', '', '')
+    endif
+
+    " Disable menu.vim.
+    if has('gui_running')
+       set guioptions=Mc
+    endif
+
+    " Disable default plugins. {{{
+    let g:loaded_rrhelper          = 1
+    let g:loaded_2html_plugin      = 1
+    let g:loaded_vimball           = 1
+    let g:loaded_vimballPlugin     = 1
+    let g:loaded_getscript         = 1
+    let g:loaded_getscriptPlugin   = 1
+    let g:loaded_matchparen        = 1
+    let g:loaded_LogiPat           = 1
+    let g:loaded_logipat           = 1
+    let g:loaded_tutor_mode_plugin = 1
+    let g:loaded_spellfile_plugin  = 1
+    let g:loaded_man               = 1
+    let g:loaded_matchit           = 1
+    " }}}
+endif
 
 "
 " }}}
 "-------------------------------------------------------------------------------
 
 "-------------------------------------------------------------------------------
-" NeoBundle: {{{
+" Dein: {{{
 "
 
-if has('vim_starting')
-    set runtimepath+=~/.vim/bundle/neobundle.vim/
+let g:dein#install_progress_type = 'title'
+
+let s:path = expand('$CACHE/dein')
+if dein#load_state(s:path)
+    let s:toml_path = '~/.vim/plugin/dein.toml'
+    let s:toml_lazy_path = '~/.vim/plugin/deinlazy.toml'
+
+    call dein#begin(s:path, [expand('<sfile>'), s:toml_path, s:toml_lazy_path])
+
+    call dein#load_toml(s:toml_path, {'lazy': 0})
+    call dein#load_toml(s:toml_lazy_path, {'lazy' : 1})
+
+    call dein#end()
+    call dein#save_state()
 endif
 
-call neobundle#begin(expand('~/.vim/bundle'))
-NeoBundleFetch 'Shougo/neobundle.vim'
-
-" Note: Add Bundles
-NeoBundle 'Shougo/vimproc.vim', {
-            \ 'build' : {
-            \     'windows' : 'tools\\update-dll-mingw',
-            \     'cygwin'  : 'make -f make_cygwin.mak',
-            \     'mac'     : 'make -f make_mac.mak',
-            \     'linux'   : 'make',
-            \     'unix'    : 'gmake',
-            \ },
-            \ }
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/neomru.vim'
-NeoBundle 'Shougo/vinarise.vim'
-NeoBundle 'mattn/benchvimrc-vim'
-NeoBundle 'itchyny/lightline.vim'
-NeoBundle 'w0ng/vim-hybrid'
-NeoBundle 'junegunn/vim-easy-align'
-NeoBundle 'osyo-manga/vim-anzu'
-"NeoBundle 'osyo-manga/vim-over'
-NeoBundle 'alpaca-tc/alpaca_tags'
-NeoBundle 'taku-o/vim-vis'
-NeoBundle 'derekwyatt/vim-scala'
-NeoBundle 'edkolev/tmuxline.vim'
-NeoBundle 'rust-lang/rust.vim'
-NeoBundle 'cespare/vim-toml'
-NeoBundle 'chrisbra/SudoEdit.vim', { 'rev': 'e7fa13b' }
-NeoBundle 'miyakogi/seiya.vim'
-"NeoBundle 'phildawes/racer', {
-"            \ 'build' : {
-"            \   'mac' : 'cargo build --release',
-"            \   'unix': 'cargo build --release',
-"            \ },
-"            \ }
-NeoBundle 'plasticboy/vim-markdown'
-NeoBundle 'tmux-plugins/vim-tmux'
-NeoBundle 'jeroenbourgois/vim-actionscript'
-
-if has('nvim')
-    NeoBundleLazy 'Shougo/deoplete.nvim', {
-        \ "autoload": { "insert": 1 }
-        \ }
-    NeoBundle 'benekastah/neomake'
-else
-    NeoBundleLazy 'Shougo/neocomplete.vim', {
-        \ "autoload": { "insert": 1 }
-        \ }
-    NeoBundle 'scrooloose/syntastic'
-endif
-
-call neobundle#end()
-
-filetype plugin indent on
-syntax enable
-
-if has('vim_starting')
-    NeoBundleCheck
+if has('vim_starting') && dein#check_install()
+    " Installation check.
+    call dein#install()
 endif
 
 "
@@ -107,120 +108,14 @@ endif
 " Plugins: {{{
 "
 
-if neobundle#tap('neocomplete.vim') "{{{
-    let s:hooks = neobundle#get_hooks("neocomplete.vim")
-    function! s:hooks.on_source(bundle)
-        let g:neocomplete#enable_at_startup = 1
-        let g:neocomplete#enable_ignore_case = 1
-        let g:neocomplete#enable_smart_case = 1
-    endfunction
-endif "}}}
+if dein#tap('deoplete.nvim') && has('nvim')
+    let g:loaded_neocomplete = 1
+endif
 
-if neobundle#tap('deoplete.nvim') "{{{
-    let s:hooks = neobundle#get_hooks("deoplete.nvim")
-    function! s:hooks.on_source(bundle)
-        let g:deoplete#enable_at_startup = 1
-    endfunction
-endif "}}}
-
-if neobundle#tap('unite.vim') "{{{
-    let g:unite_source_history_yank_enable = 1
-    if executable('ambs')
-        let g:unite_source_grep_command = 'ambs'
-        let g:unite_source_grep_default_opts = '--column --no-color'
-        let g:unite_source_grep_recursive_opt = ''
-        let g:unite_source_grep_encoding = 'utf-8'
-    endif
-endif "}}}
-
-if neobundle#tap('vinarise.vim') "{{{
-    let g:vinarise_enable_auto_detect = 0
-endif "}}}
-
-if neobundle#tap('syntastic') "{{{
-    let g:syntastic_always_populate_loc_list = 1
-    let g:syntastic_auto_loc_list = 0
-    let g:syntastic_check_on_open = 0
-    let g:syntastic_check_on_wq = 0
-    let g:syntastic_verilog_remove_include_errors = 1
-    let g:syntastic_verilog_compiler_options = "-v *.include.v"
-    let g:syntastic_scala_checkers = ["fsc"]
-endif "}}}
-
-"if neobundle#tap('neomake') "{{{
-"    autocmd vimrc BufWritePost * Neomake
-"endif "}}}
-
-if neobundle#tap('lightline.vim') "{{{
-    let g:lightline = {
-        \ 'colorscheme': 'wombat',
-        \ 'active': {
-        \   'left': [ ['mode', 'paste'], ['readonly', 'filename', 'modified', 'anzu'] ],
-        \   'right': [ ['lineinfo', 'syntastic'], ['percent'], ['fileformat', 'fileencoding', 'filetype'] ]
-        \ },
-        \ 'component': {
-        \   'lineinfo': '⭡ %3l:%-2v',
-        \ },
-        \ 'component_function': {
-        \   'readonly': 'LightlineReadonly',
-        \   'syntastic': 'SyntasticStatuslineFlag',
-        \   'anzu': 'anzu#search_status'
-        \ },
-		\ 'separator': { 'left': '⮀', 'right': '⮂' },
-        \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
-        \ }
-    function! LightlineReadonly()
-        return &readonly ? '⭤' : ''
-    endfunction
-endif "}}}
-
-if neobundle#tap('vim-easy-align') "{{{
-endif "}}}
-
-if neobundle#tap('alpaca_tags') "{{{
-    "let g:alpaca_tags#config = {
-    "            \   '_': '-R --sort=yes'
-    "            \ }
-    let g:alpaca_tags#config = {
-                \   '_': '-R'
-                \ }
-    let g:alpaca_tags#timeout_period = 0
-    autocmd vimrc BufEnter * AlpacaTagsSet
-    autocmd vimrc BufWritePost * AlpacaTagsUpdate
-endif "}}}
-
-if neobundle#tap('tmuxline.vim') "{{{
-    "let g:tmuxline_preset = 'powerline'
-    let g:tmuxline_preset = {
-                \'a'       : '#(whoami)',
-                \'b'       : '',
-                \'c'       : '',
-                \'win'     : '#I #W',
-                \'cwin'    : '#I #W',
-                \'x'       : ['#[fg=green,bold]#(cat /proc/loadavg | cut -d " " -f 1,2,3)', '#(uptime  | cut -d " " -f 3,4,5 | sed "s/,//g")'],
-                \'y'       : ['#[fg=blue,bold]%R', '%m/%d', '%Y'],
-                \'z'       : ['#[fg=black,bold]#H', '#(/sbin/ip -o -f inet addr | grep eth0 | cut -d " " -f 7)'],
-                \'options' : {'status-justify' : 'left'}
-                \ }
-    let g:tmuxline_theme = 'powerline'
-    let g:tmuxline_separators = {
-                \ 'left' : '⮀',
-                \ 'left_alt': '⮁',
-                \ 'right' : '⮂',
-                \ 'right_alt' : '⮃',
-                \ 'space' : ' '}
-endif "}}}
-
-if neobundle#tap('rust.vim') "{{{
-endif "}}}
-
-if neobundle#tap('racer') "{{{
-    let $RUST_SRC_PATH="/work/nhatta/ext_repo/rust/src/"
-endif "}}}
-
-if neobundle#tap('seiya.vim') "{{{
-    let g:seiya_auto_enable = !has( 'gui_running' )
-endif "}}}
+if dein#tap('neocomplete.vim') && has('lua')
+    let g:loaded_deoplete = 1
+endif
+let g:loaded_neobundle = 1
 
 "
 " }}}
@@ -231,10 +126,12 @@ endif "}}}
 "
 
 " Setting of default encoding
-set encoding=utf-8
-set termencoding=utf-8
+if has('vim_starting')
+    set encoding=utf-8
+    set termencoding=utf-8
+endif
 
-" The automatic recognition of the character code. {{{
+" The automatic recognition of the character code."{{{
 if !exists('did_encoding_settings') && has('iconv')
     let s:enc_euc = 'euc-jp'
     let s:enc_jis = 'iso-2022-jp'
@@ -272,26 +169,27 @@ if !exists('did_encoding_settings') && has('iconv')
 
     let did_encoding_settings = 1
 endif
-" }}}
+"}}}
 
-" When do not include Japanese, use encoding for fileencoding. {{{
-function! s:ReCheck_FENC()
-    let is_multi_byte = search("[^\x01-\x7e]", 'n', 100, 100)
-    if &fileencoding =~# 'iso-2022-jp' && !is_multi_byte
-        let &fileencoding = &encoding
-    endif
+" When do not include Japanese, use encoding for fileencoding.
+function! s:ReCheck_FENC() abort "{{{
+  let is_multi_byte = search("[^\x01-\x7e]", 'n', 100, 100)
+  if &fileencoding =~# 'iso-2022-jp' && !is_multi_byte
+    let &fileencoding = &encoding
+  endif
 endfunction
+"}}}
 
 autocmd vimrc BufReadPost * call s:ReCheck_FENC()
-" }}}
 
 " Default fileformat.
 set fileformat=unix
 " Automatic recognition of a new line cord.
 set fileformats=unix,dos,mac
-" A fullwidth character is displayed in vim properly.
-set ambiwidth=double
-"set ambiwidth=single
+
+if has('multi_byte_ime')
+    set iminsert=0 imsearch=0
+endif
 
 "
 " }}}
@@ -322,11 +220,6 @@ set wrapscan
 " Edit: {{{
 "
 
-" Enable indent
-"set autoindent
-"set smartindent
-set cindent
-
 " Smart insert tab setting
 set smarttab
 " Exchange tab to spaces.
@@ -350,13 +243,12 @@ autocmd vimrc FileType * set textwidth=0
 set backspace=indent,eol,start
 
 "" Highlight parenthesis.
-"set showmatch
+set showmatch
 "" Highlight when CursorMoved.
-"set cpoptions-=m
-"set matchtime=0
+set cpoptions-=m
+set matchtime=1
 "" Highlight <>.
-"set matchpairs+=<:>
-"set matchpairs=
+set matchpairs+=<:>
 
 " Auto reload if file is changed.
 "set autoread
@@ -374,9 +266,6 @@ set commentstring=%s
 " = をファイル名の一部と認識しない
 set isfname-==
 
-" Reload .vimrc automatically
-autocmd vimrc BufWritePost .vimrc,vimrc,vimrc_* source $MYVIMRC | echo "source $MYVIMRC"
-
 " Set swap directory
 set directory-=.
 
@@ -391,6 +280,10 @@ endif
 
 set mouse=""
 
+" Don't create backup
+set nobackup
+set writebackup
+
 "
 " }}}
 "-------------------------------------------------------------------------------
@@ -401,7 +294,11 @@ set mouse=""
 
 " Show <TAB> and <CR>
 set list
-set listchars=tab:>-,extends:>,precedes:<,trail:~
+if IsWindows()
+    set listchars=tab:>-,trail:-,extends:>,precedes:<
+else
+    set listchars=tab:▸\ ,trail:-,extends:»,precedes:«,nbsp:%
+endif
 
 " Always display statusline.
 set laststatus=2
@@ -409,7 +306,6 @@ set laststatus=2
 set cmdheight=2
 " Not show command on statusline.
 set noshowcmd
-
 
 " Disable bell.
 set novisualbell
@@ -419,7 +315,7 @@ set t_vb=
 set nowildmenu
 set wildmode=list:longest,full
 " Increase history amount.
-set history=200
+set history=1000
 " Display all the information of the tag by the supplement of the Insert mode.
 set showfulltag
 set notagbsearch
@@ -433,14 +329,6 @@ set formatoptions+=mM
 set lazyredraw
 set ttyfast
 
-" Don't create backup
-set nobackup
-set writebackup
-
-set background=dark
-colorscheme hybrid
-"hi MatchParen ctermbg=LightGray
-
 "
 " }}}
 "-------------------------------------------------------------------------------
@@ -449,10 +337,11 @@ colorscheme hybrid
 " FileType: {{{
 "
 
-" python
-autocmd vimrc FileType python if has('python')  | setlocal omnifunc=pythoncomplete#Complete  | endif
-autocmd vimrc FileType python if has('python3') | setlocal omnifunc=python3complete#Complete | endif
-"autocmd vimrc FileType python setlocal foldmethod=indent
+" Enable smart indent.
+set autoindent smartindent
+
+" Reload .vimrc automatically.
+autocmd vimrc BufWritePost .vimrc,vimrc,*.rc.vim,dein.toml,deinlazy.toml nested | source $MYVIMRC | redraw
 
 " verilog
 autocmd vimrc BufNewFile,BufRead *.v,*.vh,*.sv,*.svi,*.vp set filetype=verilog
@@ -472,6 +361,10 @@ autocmd vimrc BufNewFile,BufRead *.td set filetype=tablegen
 
 " xaml
 autocmd vimrc BufNewFile,BufRead *.xaml set filetype=xml
+
+silent! filetype plugin indent on
+syntax enable
+filetype detect
 
 "
 " }}}
@@ -504,7 +397,7 @@ nnoremap ZQ <Nop>
 nnoremap Q  <Nop>
 "}}}
 
-if neobundle#tap('unite.vim') "{{{
+if dein#tap('unite.vim') "{{{
     nnoremap [unite] <Nop>
     nmap <Space> [unite]
     nnoremap <silent> [unite]f :<C-u>Unite<Space>file<CR>
@@ -518,14 +411,14 @@ if neobundle#tap('unite.vim') "{{{
     autocmd FileType unite inoremap <silent> <buffer> <expr> <C-h> unite#do_action('vsplit')
 endif "}}}
 
-if neobundle#tap('vim-anzu') "{{{
+if dein#tap('vim-anzu') "{{{
     nmap n <Plug>(anzu-n)
     nmap N <Plug>(anzu-N)
     nmap * <Plug>(anzu-star)
     nmap # <Plug>(anzu-sharp)
 endif "}}}
 
-if neobundle#tap('vim-easy-align') "{{{
+if dein#tap('vim-easy-align') "{{{
     vmap <Enter> <Plug>(EasyAlign)
 endif "}}}
 
@@ -543,20 +436,26 @@ function! s:InitCmdwin()
     nnoremap <buffer><silent> q :<C-u>quit<CR>
     nnoremap <buffer><silent> <TAB> :<C-u>quit<CR>
 
-    if neobundle#tap('neocomplete.vim') "{{{
-        inoremap <buffer><expr><CR> neocomplete#close_popup()."\<CR>"
-        inoremap <buffer><expr><C-h> col('.') == 1 ? "\<ESC>:quit\<CR>" : neocomplete#cancel_popup()."\<C-h>"
-        inoremap <buffer><expr><BS> col('.') == 1 ? "\<ESC>:quit\<CR>" : neocomplete#cancel_popup()."\<C-h>"
-    endif "}}}
+    "if dein#tap('neocomplete.vim') "{{{
+    "    inoremap <buffer><expr><CR> neocomplete#close_popup()."\<CR>"
+    "    inoremap <buffer><expr><C-h> col('.') == 1 ? "\<ESC>:quit\<CR>" : neocomplete#cancel_popup()."\<C-h>"
+    "    inoremap <buffer><expr><BS> col('.') == 1 ? "\<ESC>:quit\<CR>" : neocomplete#cancel_popup()."\<C-h>"
+    "endif "}}}
 
-    if neobundle#tap('deoplete.nvim') "{{{
+    if dein#tap('deoplete.nvim') "{{{
         inoremap <buffer><expr><CR> deoplete#mappings#close_popup()."\<CR>"
         inoremap <buffer><expr><C-h> col('.') == 1 ? "\<ESC>:quit\<CR>" : deoplete#mappings#cancel_popup()."\<C-h>"
         inoremap <buffer><expr><BS> col('.') == 1 ? "\<ESC>:quit\<CR>" : deoplete#mappings#cancel_popup()."\<C-h>"
     endif "}}}
 
-    "inoremap <buffer><expr><TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : "\<C-x>\<C-u>\<C-p>"
-    inoremap <buffer><expr><TAB> pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>"
+    inoremap <buffer><expr><TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : deoplete#mappings#manual_complete()
+    "inoremap <buffer><expr><TAB> pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>"
+
+    function! s:check_back_space() abort "{{{
+        let col = col('.') - 1
+        return !col || getline('.')[col - 1]  =~ '\s'
+    endfunction
+    "}}}
 
     silent execute printf("1,%ddelete _", max([0,min([&history - 20, line("$") - 20])]))
     call cursor(line('$'), 0)
@@ -602,6 +501,14 @@ endfunction
 set shell=zsh
 set t_Co=256
 
+if has('nvim')
+    " Use cursor shape feature.
+    let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
+
+    " Use true color feature.
+    let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
+endif
+
 " Use vsplit mode {{{
 if has("vim_starting") && !has('gui_running') && has('vertsplit')
     function! g:EnableVsplitMode()
@@ -623,6 +530,9 @@ if has("vim_starting") && !has('gui_running') && has('vertsplit')
     let &t_RV .= "\e[?6;69h\e[1;3s\e[3;9H\e[6n\e[0;0s\e[?6;69l"
 endif
 "}}}
+
+colorscheme hybrid
+set background=dark
 
 "
 " }}}
