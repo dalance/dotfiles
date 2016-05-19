@@ -7,7 +7,7 @@ build = 'make'
 
 [[plugins]]
 repo = 'itchyny/lightline.vim'
-hook_add = '''
+hook_source = '''
   source ~/.vim/plugin/lightline.rc.vim
 '''
 
@@ -19,7 +19,7 @@ repo = 'osyo-manga/vim-anzu'
 
 [[plugins]]
 repo = 'alpaca-tc/alpaca_tags'
-hook_add = '''
+hook_source = '''
   source ~/.vim/plugin/alpaca_tags.rc.vim
 '''
 
@@ -31,3 +31,16 @@ repo = 'miyakogi/seiya.vim'
 
 [[plugins]]
 repo = 'chrisbra/SudoEdit.vim'
+
+[[plugins]]
+repo = 'benekastah/neomake'
+if = "has('nvim')"
+hook_source = '''
+  source ~/.vim/plugin/neomake.rc.vim
+'''
+
+[[plugins]]
+repo = 'Shougo/vimfiler.vim'
+depends = 'unite.vim'
+hook_add = 'let g:vimfiler_as_default_explorer = 1'
+

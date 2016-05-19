@@ -306,7 +306,7 @@ sudo() {
                     args[$(( 1+$#args ))]="sudo:$arg"
                 fi
             done
-            command nvim $args
+            nvim $args
             ;;
         *)
             command sudo $@

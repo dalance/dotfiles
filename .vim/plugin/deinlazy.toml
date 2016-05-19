@@ -1,7 +1,7 @@
 [[plugins]]
 repo = 'Shougo/unite.vim'
 depends = 'neomru.vim'
-hook_add = 'source ~/.vim/plugin/unite.rc.vim'
+hook_source = 'source ~/.vim/plugin/unite.rc.vim'
 
 [[plugins]]
 repo = 'Shougo/neoyank.vim'
@@ -67,20 +67,34 @@ on_ft = 'scala'
 [[plugins]]
 repo = 'edkolev/tmuxline.vim'
 on_cmd = 'Tmuxline'
-hook_add = 'source ~/.vim/plugin/tmuxline.rc.vim'
+hook_source = 'source ~/.vim/plugin/tmuxline.rc.vim'
 
 [[plugins]]
-repo = 'plasticboy/vim-markdown'
-on_ft = 'md'
+repo = 'rcmdnk/vim-markdown'
+on_ft = ['markdown', 'mkd']
 
 [[plugins]]
 repo = 'jeroenbourgois/vim-actionscript'
 on_ft = 'as'
 
 [[plugins]]
-repo = 'benekastah/neomake'
-if = "has('nvim')"
+repo = 'vim-jp/cpp-vim'
+on_ft = 'cpp'
+
+[[plugins]]
+repo = 'Shougo/neco-vim'
+on_ft = 'vim'
 on_i = 1
-hook_source = '''
-  source ~/.vim/plugin/neomake.rc.vim
+
+[[plugins]]
+repo = 'Shougo/neco-syntax'
+on_i = 1
+
+[[plugins]]
+repo = 'easymotion/vim-easymotion'
+on_map = '<Plug>'
+hook_add = '''
+  let g:EasyMotion_do_mapping = 0
+  let g:EasyMotion_smartcase = 1
+  nmap s <Plug>(easymotion-s2)
 '''
