@@ -374,8 +374,6 @@ alias s='dummy'
 
 alias vlc='MALLOC_CHECK_=1 vlc >& /dev/null'
 
-alias ctags='ctags -R --exclude=lib'
-
 alias top='glances'
 
 #

@@ -66,3 +66,12 @@ neovimbuild: prebuild
 	make -C build/neovim CMAKE_BUILD_TYPE=RelWithDebInfo
 	sudo make -C build/neovim install
 
+linuxbrew:
+	if [ ! -e "$(HOME)/.linuxbrew" ]; then ruby -e "$$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install)";fi
+
+brew: linuxbrew
+	brew install neovim/neovim/neovim
+	brew install tmux
+	brew install python3
+	brew tap universal-ctags/universal-ctags
+	brew install --HEAD universal-ctags

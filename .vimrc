@@ -46,7 +46,8 @@ if has('vim_starting')
                 execute '!git clone https://github.com/Shougo/dein.vim' s:dein_dir
             endif
         endif
-        execute ' set runtimepath^=' . substitute(fnamemodify(s:dein_dir, ':p') , '/$', '', '')
+        "execute ' set runtimepath^=' . substitute(fnamemodify(s:dein_dir, ':p') , '/$', '', '')
+        execute ' set runtimepath+=' . substitute(fnamemodify(s:dein_dir, ':p') , '/$', '', '')
     endif
 
     " Disable menu.vim.
@@ -348,7 +349,7 @@ set autoindent smartindent
 autocmd vimrc BufWritePost .vimrc,vimrc,*.rc.vim,dein.toml,deinlazy.toml nested | source $MYVIMRC | redraw
 
 " verilog
-autocmd vimrc BufNewFile,BufRead *.v,*.vh,*.sv,*.svi,*.vp set filetype=verilog
+autocmd vimrc BufNewFile,BufRead *.vh,*.vp set filetype=verilog
 
 " asmxyz
 autocmd vimrc BufNewFile,BufRead *.s,*.asm,*.txt set filetype=asmxyz
@@ -399,6 +400,10 @@ nnoremap <C-]> g<C-]>
 nnoremap ZZ <Nop>
 nnoremap ZQ <Nop>
 nnoremap Q  <Nop>
+"}}}
+
+" gg {{{
+nnoremap gg 1<C-v>
 "}}}
 
 if dein#tap('unite.vim') "{{{
@@ -470,14 +475,16 @@ endfunction
 "}}}
 
 " continuous number {{{
-nnoremap <silent> cu :ContinuousCmd <C-a><CR>
-vnoremap <silent> cu :ContinuousCmd <C-a><CR>
-nnoremap <silent> cd :ContinuousCmdRev <C-a><CR>
-vnoremap <silent> cd :ContinuousCmdRev <C-a><CR>
+vmap cu <Plug>(operator-cu)
+vmap cd <Plug>(operator-cd)
+call operator#user#define_ex_command( "cu", "ContinuousCmd <C-a>" )
+call operator#user#define_ex_command( "cd", "ContinuousCmdRev <C-a>" )
+
 command! -count -nargs=1 ContinuousCmd    :call s:ContinuousCmd(<count>, <q-args>, 0)
 command! -count -nargs=1 ContinuousCmdRev :call s:ContinuousCmd(<count>, <q-args>, 1)
 
 function! s:ContinuousCmd(count, cmd, rev)
+    let pos = getpos('.')
     let snf=&nrformats
     set nrformats-=octal
     let cl = col('.')
@@ -491,6 +498,7 @@ function! s:ContinuousCmd(count, cmd, rev)
     endfor
     unlet cl
     unlet snf
+    call setpos('.', pos)
 endfunction
 "}}}
 

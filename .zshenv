@@ -2,6 +2,8 @@
 
 typeset -U path
 path=(
+    $HOME/.linuxbrew/bin(N-/)
+    $HOME/.cargo/bin(N-/)
     $HOME/bin(N-/)
     /usr/local/bin(N-/)
     /usr/bin(N-/)
@@ -46,6 +48,11 @@ fi
 if ! type vim > /dev/null 2>&1; then
     alias vim=vi
 fi
+
+#- Linuxbrew Setting ---------------------------------------
+
+export HOMEBREW_BUILD_FROM_SOURCE=1
+export MAKEOPTS="-j8"
 
 #- Local Setting -------------------------------------------
 
