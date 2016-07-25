@@ -99,3 +99,9 @@ hook_add = '''
   nmap s <Plug>(easymotion-s2)
 '''
 
+[[plugins]]
+repo = 'LeafCage/vimhelpgenerator'
+on_cmd = 'VimHelpGenerator'
+hook_add = '''
+  let g:vimhelpgenerator_defaultlanguage = "en"
+'''

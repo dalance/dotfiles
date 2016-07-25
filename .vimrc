@@ -50,6 +50,7 @@ if has('vim_starting')
         execute ' set runtimepath+=' . substitute(fnamemodify(s:dein_dir, ':p') , '/$', '', '')
     endif
 
+    "set runtimepath+=~/work/vseq.vim
     " Disable menu.vim.
     if has('gui_running')
        set guioptions=Mc
@@ -474,33 +475,12 @@ endfunction
 
 "}}}
 
-" continuous number {{{
-vmap cu <Plug>(operator-cu)
-vmap cd <Plug>(operator-cd)
-call operator#user#define_ex_command( "cu", "ContinuousCmd <C-a>" )
-call operator#user#define_ex_command( "cd", "ContinuousCmdRev <C-a>" )
-
-command! -count -nargs=1 ContinuousCmd    :call s:ContinuousCmd(<count>, <q-args>, 0)
-command! -count -nargs=1 ContinuousCmdRev :call s:ContinuousCmd(<count>, <q-args>, 1)
-
-function! s:ContinuousCmd(count, cmd, rev)
-    let pos = getpos('.')
-    let snf=&nrformats
-    set nrformats-=octal
-    let cl = col('.')
-    for nc in range(1, a:count?a:count-line('.'):1)
-        if a:rev == 1
-            exe 'normal! ' . (a:count?a:count-line('.'):1 - nc + 1) . a:cmd . 'j'
-        else
-            exe 'normal! j' . nc . a:cmd
-        endif
-        call cursor('.', cl)
-    endfor
-    unlet cl
-    unlet snf
-    call setpos('.', pos)
-endfunction
-"}}}
+if dein#tap('vseq.vim') "{{{
+    vmap cu <Plug>(operator-vseq-incr-dec)
+    vmap cd <Plug>(operator-vseq-decr-dec)
+    vmap hu <Plug>(operator-vseq-incr-hex)
+    vmap hd <Plug>(operator-vseq-decr-hex)
+endif "}}}
 
 "
 " }}}

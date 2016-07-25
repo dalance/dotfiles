@@ -61,3 +61,6 @@ repo = 'kana/vim-operator-user'
 [[plugins]]
 repo = 'editorconfig/editorconfig-vim'
 
+[[plugins]]
+repo = 'dalance/vseq.vim'
+
