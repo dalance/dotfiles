@@ -293,6 +293,15 @@ make_p $cache_hosts_file $known_hosts_file && update_cache_hosts
 
 _cache_hosts=( $(< $cache_hosts_file) )
 
+# ssh
+local -A ssh_hosts
+function ssh() {
+    local window_name=$(tmux display -p '#{window_name}')
+    command ssh $@
+    tmux rename-window $window_name
+}
+
+# sudo vi
 sudo() {
     local args
     case $1 in
@@ -314,6 +323,11 @@ sudo() {
     esac
 }
 
+# tmux
+function env-update() {
+    export $(tmux show-environment | grep "DISPLAY" )
+}
+
 #
 # }}}
 #-------------------------------------------------------------------------------
@@ -326,6 +340,7 @@ alias cp='cp -rf'
 alias mv='mv -i'
 alias pd="pushd"
 alias po="popd"
+alias gpg='DISPLAY= gpg'
 
 alias vi='vim'
 alias via="vim $HOME/.zshrc"

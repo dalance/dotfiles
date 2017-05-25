@@ -1,7 +1,7 @@
-[[plugins]]
-repo = 'Shougo/unite.vim'
-depends = 'neomru.vim'
-hook_source = 'source ~/.vim/plugin/unite.rc.vim'
+#[[plugins]]
+#repo = 'Shougo/unite.vim'
+#depends = 'neomru.vim'
+#hook_source = 'source ~/.vim/plugin/unite.rc.vim'
 
 [[plugins]]
 repo = 'Shougo/neoyank.vim'

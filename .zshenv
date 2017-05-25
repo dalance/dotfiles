@@ -39,6 +39,10 @@ else
     export PAGER="less"
 fi
 
+#- Less Setting --------------------------------------------
+
+export LESS='-g -i -M -R -S -W -z-4 -x4'
+
 #- Editor Setting ------------------------------------------
 
 export EDITOR=nvim
@@ -53,6 +57,10 @@ fi
 
 export HOMEBREW_BUILD_FROM_SOURCE=1
 export MAKEOPTS="-j8"
+
+#- Go Setting ----------------------------------------------
+
+export GOPATH=$HOME/.go
 
 #- Local Setting -------------------------------------------
 

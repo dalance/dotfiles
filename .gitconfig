@@ -2,18 +2,25 @@
     ui = true
 
 [alias]
-    co = checkout
-    ci = commit
-    st = status
-    br = branch
-    gl = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+    co        = checkout
+    st        = status
+    branches  = branch -a
+    tags      = tag
+    stashes   = stash list
+    unstage   = reset -q HEAD --
+    discard   = checkout --
+    commit    = commit -v
+    uncommit  = reset --mixed HEAD~
+    amend     = commit --amend
+    precommit = diff --cached --diff-algorithm=minimal -w
+    gl        = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+    gla       = log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
 
 [http]
     proxy =
 
 [user]
-    email = dalance@gmail.com
-    name = dalance
+    useConfigOnly = true
 
 [push]
     default = simple
@@ -25,5 +32,14 @@
     PushInsteadOf = https://github.com/
     PushInsteadOf = git@github.com:
 
+[credential]
+	helper = cache --timeout=3600
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge --skip %f
+	required = true
+
 [include]
     path = .gitconfig.local
+

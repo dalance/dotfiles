@@ -63,10 +63,10 @@ if has('vim_starting')
     let g:loaded_vimballPlugin     = 1
     let g:loaded_getscript         = 1
     let g:loaded_getscriptPlugin   = 1
-    let g:loaded_netrw             = 1
-    let g:loaded_netrwPlugin       = 1
-    let g:loaded_netrwSettings     = 1
-    let g:loaded_netrwFileHandlers = 1
+    "let g:loaded_netrw             = 1
+    "let g:loaded_netrwPlugin       = 1
+    "let g:loaded_netrwSettings     = 1
+    "let g:loaded_netrwFileHandlers = 1
     let g:loaded_matchparen        = 1
     let g:loaded_LogiPat           = 1
     let g:loaded_logipat           = 1
@@ -75,6 +75,8 @@ if has('vim_starting')
     let g:loaded_man               = 1
     let g:loaded_matchit           = 1
     " }}}
+
+    let g:python3_host_prog = expand('$HOME') . '/.linuxbrew/bin/python3'
 endif
 
 "
@@ -263,11 +265,11 @@ set matchpairs+=<:>
 set infercase
 
 " Enable folding.
-set foldenable
-set foldmethod=marker
-set foldcolumn=4
-set fillchars=vert:\|
-set commentstring=%s
+"set foldenable
+"set foldmethod=marker
+"set foldcolumn=4
+"set fillchars=vert:\|
+"set commentstring=%s
 
 " = をファイル名の一部と認識しない
 set isfname-==
@@ -349,8 +351,8 @@ set autoindent smartindent
 " Reload .vimrc automatically.
 autocmd vimrc BufWritePost .vimrc,vimrc,*.rc.vim,dein.toml,deinlazy.toml nested | source $MYVIMRC | redraw
 
-" verilog
-autocmd vimrc BufNewFile,BufRead *.vh,*.vp set filetype=verilog
+" verilog -> systemverilog
+autocmd vimrc BufNewFile,BufRead *.v,*.vh,*.vp set filetype=systemverilog
 
 " asmxyz
 autocmd vimrc BufNewFile,BufRead *.s,*.asm,*.txt set filetype=asmxyz
@@ -421,6 +423,24 @@ if dein#tap('unite.vim') "{{{
     autocmd FileType unite inoremap <silent> <buffer> <expr> <C-h> unite#do_action('vsplit')
 endif "}}}
 
+if dein#tap('denite.nvim') "{{{
+    nnoremap [denite] <Nop>
+    nmap <Space> [denite]
+    nnoremap <silent> [denite]f :<C-u>Denite<Space>file<CR>
+    nnoremap <silent> [denite]g :<C-u>Denite<Space>grep<CR>
+    nnoremap <silent> [denite]m :<C-u>Denite<Space>-mode=normal<Space>file_mru<CR>
+    nnoremap <silent> [denite]h :<C-u>Denite<Space>neoyank<CR>
+
+	call denite#custom#map('_'     , "\<C-p>", 'move_to_prev_line')
+	call denite#custom#map('_'     , "\<C-n>", 'move_to_next_line')
+	call denite#custom#map('insert', "\<C-j>", '<denite:enter_mode:normal>')
+	call denite#custom#map('normal', "\<C-j>", '<denite:do_action:split>')
+    "autocmd FileType unite nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
+    "autocmd FileType unite inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
+    "autocmd FileType unite nnoremap <silent> <buffer> <expr> <C-h> unite#do_action('vsplit')
+    "autocmd FileType unite inoremap <silent> <buffer> <expr> <C-h> unite#do_action('vsplit')
+endif "}}}
+
 if dein#tap('vim-anzu') "{{{
     nmap n <Plug>(anzu-n)
     nmap N <Plug>(anzu-N)
@@ -453,7 +473,7 @@ function! s:InitCmdwin()
     "endif "}}}
 
     if dein#tap('deoplete.nvim') "{{{
-        inoremap <buffer><expr><CR> deoplete#mappings#close_popup()."\<CR>"
+        "inoremap <buffer><expr><CR> deoplete#mappings#close_popup()."\<CR>"
         inoremap <buffer><expr><C-h> col('.') == 1 ? "\<ESC>:quit\<CR>" : deoplete#mappings#cancel_popup()."\<C-h>"
         inoremap <buffer><expr><BS> col('.') == 1 ? "\<ESC>:quit\<CR>" : deoplete#mappings#cancel_popup()."\<C-h>"
     endif "}}}
@@ -476,10 +496,10 @@ endfunction
 "}}}
 
 if dein#tap('vseq.vim') "{{{
-    vmap cu <Plug>(operator-vseq-incr-dec)
-    vmap cd <Plug>(operator-vseq-decr-dec)
-    vmap hu <Plug>(operator-vseq-incr-hex)
-    vmap hd <Plug>(operator-vseq-decr-hex)
+    vmap cud <Plug>(operator-vseq-incr-dec)
+    vmap cdd <Plug>(operator-vseq-decr-dec)
+    vmap cuh <Plug>(operator-vseq-incr-hex)
+    vmap cdh <Plug>(operator-vseq-decr-hex)
 endif "}}}
 
 "
@@ -523,8 +543,8 @@ if has("vim_starting") && !has('gui_running') && has('vertsplit')
 endif
 "}}}
 
-colorscheme hybrid
 set background=dark
+colorscheme hybrid
 
 "
 " }}}

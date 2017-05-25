@@ -19,4 +19,15 @@ inoremap <expr><BS> deoplete#mappings#smart_close_popup()."\<C-h>"
 "  return deoplete#mappings#close_popup() . "\<CR>"
 "endfunction
 
+autocmd BufRead * call s:check_large_file()
+
+function! s:check_large_file() abort "{{{
+  let ret = wordcount()
+  if ret['bytes'] > 10 * 1024 * 1024
+    echo 'Disabled deoplete source( buffer, member ) at large file:' ret['bytes'] 'byte'
+    let b:deoplete_ignore_sources = ['buffer', 'member']
+  endif
+endfunction
+"}}}
+
 let g:deoplete#enable_refresh_always = 1
