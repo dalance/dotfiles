@@ -1,7 +1,42 @@
-#[[plugins]]
-#repo = 'Shougo/unite.vim'
-#depends = 'neomru.vim'
-#hook_source = 'source ~/.vim/plugin/unite.rc.vim'
+## syntax ######################################################################
+
+[[plugins]]
+repo = 'cespare/vim-toml'
+on_ft = 'toml'
+
+[[plugins]]
+repo = 'Matt-Deacalion/vim-systemd-syntax'
+on_ft = 'systemd'
+
+[[plugins]]
+repo = 'jeroenbourgois/vim-actionscript'
+on_ft = 'as'
+
+[[plugins]]
+repo = 'derekwyatt/vim-scala'
+on_ft = 'scala'
+
+[[plugins]]
+repo = 'plasticboy/vim-markdown'
+on_ft = ['markdown', 'mkd']
+hook_add = 'let g:vim_markdown_folding_disabled = 1'
+
+[[plugins]]
+repo = 'vim-jp/cpp-vim'
+on_ft = 'cpp'
+
+## complete-source #############################################################
+
+[[plugins]]
+repo = 'Shougo/neco-vim'
+on_ft = 'vim'
+on_i = 1
+
+[[plugins]]
+repo = 'Shougo/neco-syntax'
+on_i = 1
+
+## unite-source ################################################################
 
 [[plugins]]
 repo = 'Shougo/neoyank.vim'
@@ -12,20 +47,66 @@ on_source = 'unite.vim'
 repo = 'Shougo/neomru.vim'
 on_path = '.*'
 
+## command #####################################################################
+
 [[plugins]]
 repo = 'Shougo/vinarise.vim'
 on_cmd = 'Vinarise'
 hook_add = 'let g:vinarise_enable_auto_detect = 1'
 
+[[plugins]]
+repo = 'edkolev/tmuxline.vim'
+on_cmd = 'Tmuxline'
+hook_source = 'source ~/.vim/plugin/tmuxline.rc.vim'
+
+[[plugins]]
+repo = 'LeafCage/vimhelpgenerator'
+on_cmd = 'VimHelpGenerator'
+hook_add = '''
+  let g:vimhelpgenerator_defaultlanguage = "en"
+'''
+
+## rust ########################################################################
+
+[[plugins]]
+repo = 'rust-lang/rust.vim'
+on_ft = 'rust'
+hook_source = '''
+  let g:rustfmt_autosave = 1
+'''
+
+[[plugins]]
+repo = 'rhysd/rust-doc.vim'
+on_ft = 'rust'
+
 #[[plugins]]
-#repo = 'Shougo/neocomplete.vim'
-#depends = 'context_filetype.vim'
-#if = "has('lua')"
-#on_i = 1
+#repo = 'racer-rust/vim-racer'
+#on_ft = 'rust'
 #hook_source = '''
-#  let g:neocomplete#enable_at_startup = 1
-#  source ~/.vim/plugins/neocomplete.rc.vim
+#  let $RUST_SRC_PATH = expand('~/work/ext_repo/rust/src')
+#  let g:racer_experimental_completer = 1
 #'''
+
+[[plugins]]
+repo = 'autozimu/LanguageClient-neovim'
+depends = 'deoplete.nvim'
+on_ft = 'rust'
+build = './install.sh'
+hook_source = '''
+  set hidden
+  let g:LanguageClient_serverCommands = {
+      \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+      \ }
+  let g:LanguageClient_autoStart = 1
+  nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+  nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+  nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+'''
+
+## misc ########################################################################
+
+[[plugins]]
+repo = 'Shougo/context_filetype.vim'
 
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
@@ -38,70 +119,17 @@ hook_source = '''
 '''
 
 [[plugins]]
-repo = 'Shougo/context_filetype.vim'
-
-[[plugins]]
-repo = 'cespare/vim-toml'
-on_ft = 'toml'
-
-[[plugins]]
-repo = 'rust-lang/rust.vim'
-on_ft = 'rust'
-
-[[plugins]]
-repo = 'rhysd/rust-doc.vim'
-on_ft = 'rust'
-
-[[plugins]]
-repo = 'racer-rust/vim-racer'
-on_ft = 'rust'
-hook_source = '''
-  let $RUST_SRC_PATH = expand('~/work/ext_repo/rust/src')
-  let g:racer_experimental_completer = 1
-'''
-
-[[plugins]]
-repo = 'derekwyatt/vim-scala'
-on_ft = 'scala'
-
-[[plugins]]
-repo = 'edkolev/tmuxline.vim'
-on_cmd = 'Tmuxline'
-hook_source = 'source ~/.vim/plugin/tmuxline.rc.vim'
-
-[[plugins]]
-repo = 'rcmdnk/vim-markdown'
-on_ft = ['markdown', 'mkd']
-
-[[plugins]]
-repo = 'jeroenbourgois/vim-actionscript'
-on_ft = 'as'
-
-[[plugins]]
-repo = 'vim-jp/cpp-vim'
-on_ft = 'cpp'
-
-[[plugins]]
-repo = 'Shougo/neco-vim'
-on_ft = 'vim'
-on_i = 1
-
-[[plugins]]
-repo = 'Shougo/neco-syntax'
-on_i = 1
-
-[[plugins]]
-repo = 'easymotion/vim-easymotion'
-on_map = '<Plug>'
+repo = 'junegunn/vim-easy-align'
+on_event = 'BufEnter'
 hook_add = '''
-  let g:EasyMotion_do_mapping = 0
-  let g:EasyMotion_smartcase = 1
-  nmap s <Plug>(easymotion-s2)
+  let g:easy_align_delimiters = {
+    \ ',': { 'pattern': ','    , 'left_margin': 0, 'right_margin': 1 },
+    \ ';': { 'pattern': ';'    , 'left_margin': 0, 'right_margin': 1 },
+    \ '[': { 'pattern': '['    , 'left_margin': 0, 'right_margin': 0 },
+    \ ']': { 'pattern': '\]'   , 'left_margin': 0, 'right_margin': 0 },
+    \ '(': { 'pattern': '('    , 'left_margin': 1, 'right_margin': 1 },
+    \ ')': { 'pattern': ')'    , 'left_margin': 1, 'right_margin': 0 }
+    \ }
+  vmap <Enter> <Plug>(EasyAlign)
 '''
 
-[[plugins]]
-repo = 'LeafCage/vimhelpgenerator'
-on_cmd = 'VimHelpGenerator'
-hook_add = '''
-  let g:vimhelpgenerator_defaultlanguage = "en"
-'''

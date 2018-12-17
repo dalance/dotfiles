@@ -1,3 +1,5 @@
+## misc ########################################################################
+
 [[plugins]]
 repo = 'Shougo/dein.vim'
 
@@ -11,6 +13,21 @@ repo = 'Shougo/vimproc.vim'
 build = 'make'
 
 [[plugins]]
+repo = 'alpaca-tc/alpaca_tags'
+hook_source = '''
+  source ~/.vim/plugin/alpaca_tags.rc.vim
+'''
+
+[[plugins]]
+repo = 'neomake/neomake'
+if = "has('nvim')"
+hook_source = '''
+  source ~/.vim/plugin/neomake.rc.vim
+'''
+
+## ui ##########################################################################
+
+[[plugins]]
 repo = 'itchyny/lightline.vim'
 hook_source = '''
   source ~/.vim/plugin/lightline.rc.vim
@@ -20,48 +37,21 @@ hook_source = '''
 repo = 'w0ng/vim-hybrid'
 
 [[plugins]]
+repo = 'rhysd/vim-color-spring-night'
+
+[[plugins]]
 repo = 'osyo-manga/vim-anzu'
 
 [[plugins]]
-repo = 'alpaca-tc/alpaca_tags'
-hook_source = '''
-  source ~/.vim/plugin/alpaca_tags.rc.vim
-'''
+repo = 'miyakogi/seiya.vim'
+
+## edit ########################################################################
 
 [[plugins]]
 repo = 'taku-o/vim-vis'
 
 [[plugins]]
-repo = 'miyakogi/seiya.vim'
-
-[[plugins]]
-repo = 'chrisbra/SudoEdit.vim'
-
-[[plugins]]
-repo = 'benekastah/neomake'
-if = "has('nvim')"
-hook_source = '''
-  source ~/.vim/plugin/neomake.rc.vim
-'''
-
-#[[plugins]]
-#repo = 'Shougo/vimfiler.vim'
-#depends = 'unite.vim'
-#hook_add = 'let g:vimfiler_as_default_explorer = 1'
-
-[[plugins]]
-repo = 'junegunn/vim-easy-align'
-hook_add = '''
-  let g:easy_align_delimiters = {
-    \ ',': { 'pattern': ','    , 'left_margin': 0, 'right_margin': 1 },
-    \ ';': { 'pattern': ';'    , 'left_margin': 0, 'right_margin': 1 },
-    \ '[': { 'pattern': '['    , 'left_margin': 0, 'right_margin': 0 },
-    \ ']': { 'pattern': '\]'   , 'left_margin': 0, 'right_margin': 0 },
-    \ '(': { 'pattern': '('    , 'left_margin': 1, 'right_margin': 1 },
-    \ ')': { 'pattern': ')'    , 'left_margin': 1, 'right_margin': 0 }
-    \ }
-  vmap <Enter> <Plug>(EasyAlign)
-'''
+repo = 'lambdalisue/suda.vim'
 
 [[plugins]]
 repo = 'kana/vim-operator-user'
@@ -74,10 +64,4 @@ repo = 'dalance/vseq.vim'
 
 [[plugins]]
 repo = 'AndrewRadev/linediff.vim'
-
-[[plugins]]
-repo = 'editorconfig/editorconfig-vim'
-
-[[plugins]]
-repo = 'Matt-Deacalion/vim-systemd-syntax'
 

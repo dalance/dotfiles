@@ -337,6 +337,8 @@ set formatoptions+=mM
 set lazyredraw
 set ttyfast
 
+"set nowrap
+
 "
 " }}}
 "-------------------------------------------------------------------------------
@@ -476,6 +478,7 @@ function! s:InitCmdwin()
         "inoremap <buffer><expr><CR> deoplete#mappings#close_popup()."\<CR>"
         inoremap <buffer><expr><C-h> col('.') == 1 ? "\<ESC>:quit\<CR>" : deoplete#mappings#cancel_popup()."\<C-h>"
         inoremap <buffer><expr><BS> col('.') == 1 ? "\<ESC>:quit\<CR>" : deoplete#mappings#cancel_popup()."\<C-h>"
+        call deoplete#custom#option('ignore_sources', {'_': ['around', 'vim']})
     endif "}}}
 
     inoremap <buffer><expr><TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : deoplete#mappings#manual_complete()
@@ -544,7 +547,19 @@ endif
 "}}}
 
 set background=dark
-colorscheme hybrid
+"colorscheme hybrid
+let g:spring_night_high_contrast = 1
+colorscheme spring-night
+
+" For Vim 7.4.1799 or later
+if has('termguicolors')
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    set termguicolors
+endif
+
+" For Neovim 0.1.5 or later
+set termguicolors
 
 "
 " }}}

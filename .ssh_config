@@ -1,6 +1,8 @@
 ServerAliveInterval 10
 ServerAliveCountMax 3
 
+Include ~/.ssh_config.local
+
 Host github
   HostName github.com
   IdentityFile ~/.ssh/id_ed25519

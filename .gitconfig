@@ -33,13 +33,15 @@
     PushInsteadOf = git@github.com:
 
 [credential]
-	helper = cache --timeout=3600
+    helper = cache --timeout=3600
 
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge --skip %f
-	required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge --skip %f
+    required = true
 
 [include]
     path = .gitconfig.local
 
+[pager]
+    lfs-diff = true

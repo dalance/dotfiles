@@ -24,8 +24,8 @@ autocmd BufRead * call s:check_large_file()
 function! s:check_large_file() abort "{{{
   let ret = wordcount()
   if ret['bytes'] > 10 * 1024 * 1024
-    echo 'Disabled deoplete source( buffer, member ) at large file:' ret['bytes'] 'byte'
-    let b:deoplete_ignore_sources = ['buffer', 'member']
+    "echo 'Disabled deoplete source( buffer, member ) at large file:' ret['bytes'] 'byte'
+    "call deoplete#custom#option('ignore_sources', {'_': ['buffer', 'member']})
   endif
 endfunction
 "}}}

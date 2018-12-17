@@ -312,7 +312,7 @@ sudo() {
                 if [ $arg[1] = '-' ]; then
                     args[$(( 1+$#args ))]=$arg
                 else
-                    args[$(( 1+$#args ))]="sudo:$arg"
+                    args[$(( 1+$#args ))]="suda://$arg"
                 fi
             done
             nvim $args
@@ -326,6 +326,15 @@ sudo() {
 # tmux
 function env-update() {
     export $(tmux show-environment | grep "DISPLAY" )
+}
+
+# make
+function make() {
+    if type pipecolor > /dev/null; then
+        command make $@ | pipecolor -t 50
+    else
+        command make $@
+    fi
 }
 
 #
@@ -372,10 +381,10 @@ if [ -f $HOME/.dir_colors ]; then
 fi
 
 # ls
-alias la='ls -aF --show-control-char --color=always'
-alias ls='ls --show-control-char --color=always'
-alias ll='ls -l --show-control-char --color=always'
-alias l.='ls -d .[a-zA-Z]* --color=always'
+alias la='ls -aF --show-control-char --color=auto'
+alias ls='ls --show-control-char --color=auto'
+alias ll='ls -l --show-control-char --color=auto'
+alias l.='ls -d .[a-zA-Z]* --color=auto'
 
 alias du="du -h"
 alias df="df -h"
