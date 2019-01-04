@@ -53,7 +53,7 @@ else
   ssh_hostname=""
   directory="#[bold]#[underscore]#[bg=black,fg=green]$3#[default]"
   pane_tty=$4
-  last_command=$(ps --no-headers -t $pane_tty -o args kstart_time | grep -v zsh | head -n 1)
+  last_command=$(ps --no-headers -t $pane_tty -o args kstart_time | grep -v '^-.*' | head -n 1)
   if [[ $last_command != "" ]]; then
     last_command="#[bold]#[underscore]#[bg=black,fg=white]: $last_command#[default]"
   fi
