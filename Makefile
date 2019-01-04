@@ -1,6 +1,7 @@
 DOTFILES_EXCLUDES := .DS_Store .git .gitmodules .gitignore
 DOTFILES_TARGET   := $(wildcard .??*)
 DOTFILES_FILES    := $(filter-out $(DOTFILES_EXCLUDES), $(DOTFILES_TARGET))
+BINFILES_FILES    := $(wildcard bin/*)
 
 default: update deploy
 
@@ -21,10 +22,12 @@ update:
 
 deploy:
 	@$(foreach val, $(DOTFILES_FILES), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
+	@$(foreach val, $(BINFILES_FILES), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
 	@mkdir -p $(HOME)/.zsh
 	@mkdir -p $(HOME)/.config
 	@mkdir -p $(HOME)/.vimundo
 	@mkdir -p $(HOME)/.ssh
+	@mkdir -p $(HOME)/bin
 	@ln -sfnv $(HOME)/.vim   $(HOME)/.config/nvim
 	@ln -sfnv $(HOME)/.vimrc $(HOME)/.config/nvim/init.vim
 	@ln -sfnv $(HOME)/.ssh_config $(HOME)/.ssh/config

@@ -1,0 +1,62 @@
+#!/bin/zsh
+
+if [[ $1 = "ssh" ]]; then
+  pane_pid=$2
+  info=$({ pgrep -flaP $pane_pid ; ps -o command -p $pane_pid; } | xargs -I{} echo {} | awk '/ssh/' | sed -E 's/^[0-9]*[[:blank:]]*ssh //')
+  port=$(echo $info | grep -Eo '\-p ([0-9]+)'|sed 's/-p //')
+  if [ -z $port ]; then
+    local port=22
+  fi
+  info=$(echo $info | sed 's/\-p '"$port"'//g')
+  user=$(echo $info | awk '{print $NF}' | cut -f1 -d@)
+  host=$(echo $info | awk '{print $NF}' | cut -f2 -d@)
+
+  if [ $user = $host ]; then
+    user=$(whoami)
+    list=$(awk '
+      $1 == "Host" {
+        gsub("\\\\.", "\\\\.", $2);
+        gsub("\\\\*", ".*", $2);
+        host = $2;
+        next;
+      }
+      $1 == "User" {
+      $1 = "";
+        sub( /^[[:space:]]*/, "" );
+        printf "%s|%s\n", host, $0;
+      }' ~/.ssh/config
+    )
+    echo $list | while read line; do
+      host_user=${line#*|}
+      if [[ "$host" =~ $line ]]; then
+        user=$host_user
+        break
+      fi
+    done
+  fi
+  ssh_hostname="#[bold]#[underscore]#[bg=black,fg=colour013]ssh:$user@$host#[default]"
+  git_info=""
+  directory=""
+  last_command=""
+else
+  if git_status=$(cd $3 && git status 2>/dev/null ); then
+    git_branch="$(echo $git_status| awk 'NR==1 {print $3}')"
+    case $git_status in
+      *Changes\ not\ staged* ) state="#[bold]#[underscore]#[bg=black,fg=yellow] ± #[fg=default]" ;;
+      *Changes\ to\ be\ committed* ) state="#[bold]#[underscore]#[bg=black,fg=blue] + #[default]" ;; 
+      * ) state="#[bold]#[underscore]#[bg=black,fg=green] ✔ #[default]" ;;
+    esac
+    git_info="#[bold]#[underscore]#[bg=black,fg=colour014] ⭠ ${git_branch} #[default]${state}"
+  else
+    git_info=""
+  fi
+  ssh_hostname=""
+  directory="#[bold]#[underscore]#[bg=black,fg=green]$3#[default]"
+  pane_tty=$4
+  last_command=$(ps --no-headers -t $pane_tty -o args kstart_time | grep -v zsh | head -n 1)
+  if [[ $last_command != "" ]]; then
+    last_command="#[bold]#[underscore]#[bg=black,fg=white]: $last_command#[default]"
+  fi
+fi
+
+echo "$ssh_hostname$directory$git_info$last_command"

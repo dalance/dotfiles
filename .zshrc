@@ -17,22 +17,57 @@ zstyle ':completion:*:sudo:*'  environ      PATH="$SUDO_PATH:$PATH"
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
+# Hook: {{{
+#
+
+autoload -Uz add-zsh-hook
+
+#
+# }}}
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
 # VCS: {{{
 #
 
-autoload -Uz vcs_info
+#autoload -Uz vcs_info
+#
+#zstyle  ':vcs_info:*:*'   formats      '[%b(%s)]'
+#zstyle  ':vcs_info:svn:*' branchformat '%b:%r'
+#
+#function precmd_vcs() {
+#    psvar=()
+#    LANG=en_US.UTF-8 vcs_info
+#    [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+#}
+#
+#add-zsh-hook precmd precmd_vcs
 
-zstyle  ':vcs_info:*:*'   formats      '[%b(%s)]'
-zstyle  ':vcs_info:svn:*' branchformat '%b:%r'
+#
+# }}}
+#-------------------------------------------------------------------------------
 
-function precmd_vcs() {
-    psvar=()
-    LANG=en_US.UTF-8 vcs_info
-    [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+#-------------------------------------------------------------------------------
+# tmux: {{{
+#
+
+function tmux_refresh() {
+    if [ ! -z $TMUX ]; then
+        tmux refresh-client -S
+    fi
 }
 
-autoload -Uz add-zsh-hook
-add-zsh-hook precmd precmd_vcs 
+function tmux_env_update() {
+    if [ ! -z $TMUX ]; then
+        env=$(tmux show-environment | grep "^DISPLAY" )
+        if [ ! -z $env ]; then
+            export $env
+        fi
+    fi
+}
+
+add-zsh-hook precmd tmux_refresh
+add-zsh-hook precmd tmux_env_update
 
 #
 # }}}
@@ -43,7 +78,8 @@ add-zsh-hook precmd precmd_vcs
 #
 
 PROMPT='%B%{[36m%}%n%{[32m%}@%{[32m%}%m%{[m%}%b%B[%h]%0(?||%130(?||%20(?||%{[31m%})))%#%{[m%}%b '
-RPROMPT='%B%{[33m%}[%~]%{[35m%}%1v%{[m%}%b'
+#RPROMPT='%B%{[33m%}[%~]%{[35m%}%1v%{[m%}%b'
+RPROMPT='%B%{[33m%}[%~]%{[m%}%b'
 
 #
 # }}}
@@ -53,7 +89,7 @@ RPROMPT='%B%{[33m%}[%~]%{[35m%}%1v%{[m%}%b'
 # Key Bind: {{{
 #
 
-stty erase '^H'
+#stty erase '^H'
 stty intr  '^C'
 stty susp  '^Z'
 
@@ -70,8 +106,8 @@ bindkey "^S" history-incremental-search-forward
 
 LISTMAX=0
 HISTFILE=$HOME/.zsh/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
+HISTSIZE=100000
+SAVEHIST=100000
 
 if [ $UID = 0 ]; then
     unset HISTFILE
@@ -201,7 +237,7 @@ unsetopt mail_warning           # シェルが最後にチェックした後で�
 setopt   path_dirs              # コマンド名に / が含まれているとき PATH 中のサブディレクトリを探す
 setopt   print_eight_bit        # 補完候補リストの日本語を適正表示
 unsetopt print_exit_value       # プログラムの返り値が 0 でないとき、それを表示する
-unsetopt rc_quotes              # シングルクォートで囲まれた文字列内部で `''' をシングルクォートとして扱う
+unsetopt rc_quotes              # シングルクォートで囲まれた文字列内部で \`\'\'\' をシングルクォートとして扱う
 unsetopt rm_star_silent         # rm * を実行する前に確認しない
 unsetopt rm_star_wait           # rm * を実行する前に10秒待つ
 setopt   short_loops            # FOR, REPEAT, SELECT, IF, FUNCTION などで簡略文法が使えるようになる
@@ -323,11 +359,6 @@ sudo() {
     esac
 }
 
-# tmux
-function env-update() {
-    export $(tmux show-environment | grep "DISPLAY" )
-}
-
 # make
 function make() {
     if type pipecolor > /dev/null; then
@@ -420,9 +451,9 @@ fi
 # Plugin: {{{
 #
 
-source ~/dotfiles/zplug/zplug
+source ~/dotfiles/zplug/init.zsh
 
-zplug "zsh-users/zsh-syntax-highlighting", nice:10
+zplug "zsh-users/zsh-syntax-highlighting", defer:2
 zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zaw"
 zplug "seebi/dircolors-solarized", as:command
